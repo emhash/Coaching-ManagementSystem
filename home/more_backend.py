@@ -1,4 +1,4 @@
-from users.models import Student, Teacher
+from users.models import Student, MessageForTeacher
 import random
 
 def calculate_grade(marks, out_of):
@@ -28,11 +28,14 @@ def generate_unique_integer_id():
             return random_id
 
 
-def teacher_dashboard_common_data(request):
-    data = 'FUTURE'
-    
+def common_data(request):
+    try:
+        unviewed_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher, visited = False).count()
+
+    except:
+        unviewed_msg = 0
     context = {
-        'data' : data,
+        'unviewed_msg' : unviewed_msg,
     }
     return context 
 

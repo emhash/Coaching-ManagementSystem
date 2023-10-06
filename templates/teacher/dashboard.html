@@ -3,9 +3,9 @@
 {% block content %}
 <style>
     .time-since {
-      font-size: 12px; /* Adjust the size as needed */
-      color: #333; /* Change the color to your desired color */
-      vertical-align: middle; /* Align the text vertically with the icon */
+      font-size: 12px; 
+      color: #333; 
+      vertical-align: middle; 
     }
 </style>
 
@@ -68,8 +68,8 @@
         <a href="{% url "teacher_dashb" 'routine' %}">
             <div class="status">
                 <div class="info">
-                    <h3>যেসব বিষয় পড়ান</h3>
-                    <h1>Routine</h1>
+                    <h3>ক্লাস শিডিউল</h3>
+                    <h1>রুটিন</h1>
                 </div>
                 <div class="progresss">
                     <img src="{% static "image/routine.png" %}" alt="">
@@ -85,7 +85,7 @@
 
 <!-- New Users Section -->
 <div class="new-users">
-    <h2>New Users</h2>
+    <h2>নতুন যারা আপনার ব্যাচে এসেছে</h2>
     <div class="user-list">
 
         {% for usr in newuser %}
@@ -133,7 +133,7 @@
             notifications_none
         </span>
     </div>
-
+    {% for c in data %}
     <div class="notification">
         <div class="icon">
             <span class="material-icons-sharp">
@@ -142,9 +142,9 @@
         </div>
         <div class="content">
             <div class="info">
-                <h3>৯ম এর ক্লাস</h3>
+                <h3>প্রজাপতি ব্যাচে ৯ম এর ক্লাস</h3>
                 <small class="text_muted">
-                    08:00 AM - 12:00 PM
+                    {{ c.start_class }} - {{ c.end_class }}
                 </small>
             </div>
             <span class="material-icons-sharp">
@@ -152,6 +152,40 @@
             </span>
         </div>
     </div>
+    
+    <script>
+        // Get the start time from the Django variable and convert it to a JavaScript Date object
+        var startTime = new Date('{{ c.start_class }}');
+        
+        // Calculate the time 30 minutes before the class starts
+        var reminderTime = new Date(startTime.getTime() - 30 * 60000);
+        
+        // Calculate the time 1 hour after the class starts
+        var endTime = new Date(startTime.getTime() + 60 * 60000);
+        
+        // Get the current time
+        var currentTime = new Date();
+        
+        // Set a reminder for 30 minutes before the class starts
+        if (currentTime < reminderTime) {
+            var timeUntilReminder = reminderTime - currentTime;
+            setTimeout(function() {
+                alert('Reminder: Your class starts in 30 minutes!');
+            }, timeUntilReminder);
+        }
+        
+        // Remove the reminder 1 hour after the class starts
+        if (currentTime < endTime) {
+            var timeUntilRemoveReminder = endTime - currentTime;
+            setTimeout(function() {
+                // Remove the reminder here (e.g., by hiding a message)
+                // You can add your own logic for removing the reminder
+            }, timeUntilRemoveReminder);
+        }
+    </script>
+{% endfor %}
+
+
 
     <div class="notification deactive">
         <div class="icon">

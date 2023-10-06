@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .manager import CustomManager
 from multiselectfield import MultiSelectField
+from ckeditor.fields import RichTextField
 from django.core.exceptions import ValidationError
 from datetime import datetime, timedelta
 
@@ -90,7 +91,7 @@ class Subjects(models.Model):
     def __str__(self):
         return self.name
     
-class SubjectsPerClass(models.Model):
+class ClassWithSubject(models.Model):
     s_class = models.CharField(max_length=50, choices=class_for_student, null=True, blank=True)
     subjects = models.ManyToManyField(Subjects)
 
@@ -122,14 +123,29 @@ class Batch(models.Model):
 
 
 # HERE need to change for not allow to enter new timw within first class duration (Need UPDATE) -->
+
 class MakeBatch(models.Model):
+
+
+    # DAY_CHOICES = (
+    #     ('Saturday', 'Saturday'),
+    #     ('Sunday', 'Sunday'),
+    #     ('Monday', 'Monday'),
+    #     ('Tuesday', 'Tuesday'),
+    #     ('Wednesday', 'Wednesday'),
+    #     ('Thursday', 'Thursday'),
+    #     ('Friday', 'Friday'),
+    # )
+
+
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
-    class_name = models.ForeignKey( SubjectsPerClass, on_delete=models.CASCADE)
+    class_name = models.ForeignKey( ClassWithSubject, on_delete=models.CASCADE)
 
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, null=True,blank=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True,blank=True)
     start_class = models.TimeField(null=True,blank=True)
     end_class = models.TimeField(null=True, blank=True)
+    # day_of_week = models.CharField(max_length=10, choices=DAY_CHOICES, null=True, blank=True)
    
 
     # def save(self, *args, **kwargs):
@@ -162,7 +178,7 @@ class Student(models.Model):
     profile_pic = models.ImageField( upload_to="student", default='avatar.png')
 
     # mandatory
-    class_subjects = models.ForeignKey(SubjectsPerClass, on_delete=models.CASCADE, null=True, blank=True )
+    class_subjects = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE, null=True, blank=True )
     s_id = models.IntegerField(null=True, blank=True)
     guardian_phone = models.CharField(max_length=15)
     your_subjects = MultiSelectField(max_length=170, null=True, blank=True)
@@ -252,6 +268,34 @@ class MarksOfStudent(models.Model):
     def __str__(self):
         return f"{self.std} - {self.subject}"
 
+
+
+
+class MessageForTeacher(models.Model):
+
+    headline = models.CharField( max_length=250)
+    description = RichTextField(blank=True, null=True)
+    message_for = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    upload_at = models.DateTimeField(auto_now_add=True)
+    visited = models.BooleanField()
+    
+
+    def __str__(self) -> str:
+        return self.headline
+ 
+
+class MessageForStudent(models.Model):
+
+    headline = models.CharField( max_length=250)
+    description = RichTextField(blank=True, null=True)
+    message_for = models.ForeignKey(Student, on_delete=models.CASCADE)
+    upload_at = models.DateTimeField(auto_now_add=True)
+    visited = models.BooleanField()
+
+
+    def __str__(self) -> str:
+        return self.headline
+ 
 
 
 # Try to collect fee accourding to student's ability per month.

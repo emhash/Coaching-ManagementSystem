@@ -1,0 +1,15 @@
+
+{% if user.role == "student" %}
+{%  include "main/m1.html" %}
+
+{% elif user.role == "teacher" %}
+
+{% include "main/m2.html" %}
+
+{% elif user.role == "guardian" %}
+
+{% include "main/dash_base.html" %}
+
+{% endif %}
+
+

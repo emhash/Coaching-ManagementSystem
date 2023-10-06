@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Teacher, Guardian, SubjectsPerClass,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam
+from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -25,11 +25,11 @@ class StudentAdmin(admin.ModelAdmin):
     list_filter = ('class_subjects', 's_approval', 'guardian_phone_is_verified', 'created_at','batch')
     search_fields = ('user__email', 's_name', 's_id', 'guardian_phone')
 
-class SubjectsPerClasss(admin.ModelAdmin):
+class ClassWithSubjects(admin.ModelAdmin):
     filter_horizontal = ('subjects',)
     # list_display = ('id',)
 
-admin.site.register(SubjectsPerClass, SubjectsPerClasss)
+admin.site.register(ClassWithSubject, ClassWithSubjects)
 
 
 
@@ -62,3 +62,5 @@ class MarksOfStudentAdmin(admin.ModelAdmin):
 admin.site.register(MarksOfStudent, MarksOfStudentAdmin)
 
 admin.site.register(CreateExam)
+admin.site.register(MessageForTeacher)
+admin.site.register(MessageForStudent)

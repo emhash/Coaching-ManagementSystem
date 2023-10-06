@@ -69,7 +69,7 @@
                        mail_outline
                    </span>
                    <h3>বার্তা</h3>
-                   <span class="message-count">27</span>
+                   <span class="message-count">{{unviewed_msg}}</span>
                </a>
                
                <a {% if request.path == apply_leave %}class="active"{% endif %} href="{% url 'teacher_dashb' page='apply_leave' %}">

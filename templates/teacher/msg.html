@@ -3,20 +3,29 @@
 {% block content %}
 
 <h1>Send a message for all your student</h1>
+
 <div class="recent-orders">
-    <table>
-        <thead>
-            <tr>
-                <th>Course Name</th>
-                <th>Course Number</th>
-                <th>Payment</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <a href="#">Show All</a>
+    
+
+    {% for m in all_message %}
+    {% if m.visited == False %}
+    
+    <a href="{% url "seen_message" m.id %}" style = "color:red;" class="input-field ">
+        {{m}}
+        
+    </a>
+    {% else %}
+    <a href="#" style = "color:green;" class="input-field ">
+        {{m.headline}}
+        
+    </a>
+    {% endif %}
+    
+    <br>
+    {% endfor %}
+
+
+
 </div>
 
 

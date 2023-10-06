@@ -25,6 +25,8 @@ urlpatterns = [
     path('teacher_dashboard/add_mark/<str:shift>/<str:cls>/', add_mark2, name='add_mark2'),
     path('teacher_dashboard/add_mark/<str:shift>/<str:cls>/<str:subject>/', add_mark3, name='add_mark3'),
     path('teacher_dashboard/add_mark/<str:shift>/<str:cls>/<str:subject>/<str:exam>/', add_mark4, name='add_mark4'),
+    path('teacher_dashboard/msg/<int:msg_id>/', seen_message, name='seen_message'),
+
 
 
     #   GUARDIAN ALL DASHBOARD LINK --->

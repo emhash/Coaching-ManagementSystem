@@ -1,8 +1,10 @@
+from .forms import TeacherProfileForm,PassChangeForm
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect,get_object_or_404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, logout, login
 from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm
-# from users.models import Student, Teacher, Guardian,Subjects,SubjectsPerClass
+# from users.models import Student, Teacher, Guardian,Subjects,ClassWithSubject
 from users.models import *
 from .more_backend import *
 from django.contrib.auth.decorators import login_required
@@ -228,7 +230,7 @@ def add_mark1(request, shift):
         data = MakeBatch.objects.filter(batch=the_batch, teacher=ts)
         dls = set()
         for d in data:
-            shft = get_object_or_404(SubjectsPerClass, s_class=d.class_name)
+            shft = get_object_or_404(ClassWithSubject, s_class=d.class_name)
             dls.add(shft)
 
         # print(dls)
@@ -361,7 +363,12 @@ def teacher_dashb(request, page=None):
             return render(request, 'teacher/add_mark.html', {'data':shift})
         
         elif page == 'msg':
-            return render(request, 'teacher/msg.html')
+            all_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher).order_by('upload_at')
+            
+            context = {
+                'all_message':all_msg,
+            }
+            return render(request, 'teacher/msg.html', context)
         
         elif page == 'apply_leave':
             return render(request, 'teacher/apply_leave.html')
@@ -384,7 +391,7 @@ def teacher_dashb(request, page=None):
 
             for b in batch_of_teacher:
                 subj = get_object_or_404(Subjects, name=b.subject)
-                cls = get_object_or_404(SubjectsPerClass, s_class=b.class_name)
+                cls = get_object_or_404(ClassWithSubject, s_class=b.class_name)
                 the_student = Student.objects.filter(batch_id=b.batch.id, 
                                                      your_subjects__contains=subj.name, 
                                                      class_subjects=cls
@@ -411,12 +418,14 @@ def teacher_dashb(request, page=None):
         
         else:
             
+            # ----------- Getting the new registered student of coaching ---------
+            # ------------------ who took subject with this teacher ---------------
             batch_of_teacher = MakeBatch.objects.filter(teacher=request.user.teacher)
             your_students = set()
 
             for b in batch_of_teacher:
                 subj = get_object_or_404(Subjects, name=b.subject)
-                cls = get_object_or_404(SubjectsPerClass, s_class=b.class_name)
+                cls = get_object_or_404(ClassWithSubject, s_class=b.class_name)
                 the_student = Student.objects.filter(
                     batch_id=b.batch.id,
                     your_subjects__contains=subj.name,
@@ -431,7 +440,19 @@ def teacher_dashb(request, page=None):
             page_number = request.GET.get('page')
             current_page = paginator.get_page(page_number)
 
-            return render(request, 'teacher/dashboard.html', {'newuser': current_page})
+            # --------------------------------------------------------
+
+            # ------------------- Un visited message --------------------
+            
+
+            # -----------------------------------------
+             
+            context = {
+                'newuser': current_page,
+                'data' : batch_of_teacher,
+                
+            }
+            return render(request, 'teacher/dashboard.html', context)
 
     else:
         return render(request, 'main/404.html')
@@ -439,10 +460,6 @@ def teacher_dashb(request, page=None):
 
 
 # -------------------DONE ( Settings for Teacher )----------------------
-from .forms import TeacherProfileForm,PassChangeForm
-from django.contrib import messages
-
-
 
 @login_required
 def change_password(request):
@@ -525,9 +542,31 @@ def edit_profile(request):
 
 #  -------------------------------------
 
+def seen_message(request, msg_id):
+
+    if request.user.role == "student":
+        # content = get_object_or_404(MessageForStudent, id=msg_id)
+        # context = {'sms':content}
+        pass
+
+    elif request.user.role == "teacher":
+        if msg_id is not None:
+            try:
+                content = get_object_or_404(MessageForTeacher, id=msg_id)
+                content.visited = True
+                content.save()
+                context = {'sms':content}
+            except:
+                return render(request, 'teacher/error.html', {'error_message': ' ত্রুটি ! আপনি যে তথ্য এর রিকুয়েস্ট দিয়েছেন তা হয়ত সিস্টেমে নেই । '})
+        else:
+            content = "NOTHING. Its a spam"
+            context = {'sms':content}
+
+    else:
+        return render(request, 'main/404.html')
 
 
-
+    return render(request, 'main/read_msg.html', context)
 
 
 

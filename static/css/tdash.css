@@ -4,15 +4,15 @@
   }
   
 :root{
-    --color-primary: #c5a515;
+    --color-primary: #c2a710;
     --color-danger: #FF0060;
     --color-success: #1B9C85;
     --color-warning: #F7D060;
     --color-white: rgb(255, 242, 231);
     --color-info-dark: #00701c;
     --color-dark: #110d24;
-    --color-light: rgb(20, 26, 78);
-    --color-dark-variant: #06213f;
+    --color-light: rgb(78, 9, 55);
+    --color-dark-variant: #247adb;
     --color-background: #bcd0f5d2;
 
     --card-border-radius: 2rem;
