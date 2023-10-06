@@ -1,0 +1,30 @@
+<section class="category" id="dashboard">
+
+    <div class="heading">
+        <span>অভিনন্দন</span>
+        <h3>আপনার জন্য বার্তা </h3>
+    </div>
+
+    <div class="box-container">
+
+        
+
+            <div class="box">
+                <h3>
+                    Your account is being procceed. Hold on till you got approval.
+                    <br>
+                    আপনার অ্যাকাউন্ট টি পর্যবেক্ষণ অবস্থায় আছে। {% if user.role == "student" %}আপনি শিক্ষার্থী হলে, অভিবাবক এর ফোন নাম্বার যাচাই করার পর আপনার অ্যাকাউন্ট একটিভেট হবে। {% endif %}আপনার অ্যাকাউন্ট অ্যাক্টিভ হওয়ার পর আপনি আপনার কাঙ্খিত ড্যাশবোর্ড দেখতে পারবেন। 
+                </h3>
+
+            </div>
+            
+        </div>
+        
+        {% if user.role == "student" %}
+        <p style="font-size: 2rem;color: #4da314;">নাম : {{ student_profile.s_name }}</p>
+        <p style="font-size: 2rem;color: #4da314;">আইডি : {{ student_profile.s_id }}</p>
+        <p style="font-size: 2rem;color: #4da314;">অভিবাবকের মোবাইল : {{ student_profile.guardian_phone }}</p>
+        <p style="font-size: 2rem;color: red;"> যদি কোনো তথ্য ভুল কিংবা সংশোধন করার থাকে তাহলে এডমিন এর সাথে যোগাযোগ করুন ।  </p>
+        {% endif %}
+
+</section>

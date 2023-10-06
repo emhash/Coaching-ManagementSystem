@@ -1,0 +1,60 @@
+{% extends "teacher/base.html" %}
+{% load static %}
+{% block content %}
+
+<h1>Your schedule routine</h1>
+<div class="recent-orders">
+    <table>
+        <thead>
+            <tr>
+                <th>Shift</th>
+                <th>Batch</th>
+                <th>Class</th>
+                <th>Subject</th>
+                <th>Start</th>
+                <th>End</th>
+
+                
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% if routine %}
+            {% for r in routine %}
+            <tr>
+                <td>
+                    {{r.batch.shift}}
+                </td>
+            <td>
+                {{r.batch.batch_name}}
+            </td> 
+            <td>
+                {{r.class_name}}
+            </td>
+            <td>
+                {{r.subject}}
+            </td>
+            <td>
+                {{r.start_class}}
+            </td> 
+            <td>
+                {{r.end_class}}
+            </td> 
+        </tr>
+        {% endfor %}
+            
+            
+            {% else %}
+            <tr>
+                <td colspan="5"><h2>দুঃখিত আপনার কোনো বিষয় / শিক্ষার্থী নেই</h2></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock content %}
+
+

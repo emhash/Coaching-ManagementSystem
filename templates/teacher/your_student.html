@@ -1,0 +1,50 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<h1>আপনার Students</h1>
+<div class="recent-orders">
+    
+    <table>
+        <thead>
+            <tr>
+                <th>শিক্ষার্থীর নাম</th>
+                <th>শিক্ষার্থীর আইডি</th>
+                <th>অবিভাবক এর নাম্বার</th>
+                <th>ভর্তি তারিখ </th>
+                <th>শেষ অ্যাক্টিভ </th>
+
+                
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            
+            <tr>
+                <td>
+                    {{s.s_name}}
+                </td>
+                <td>
+                    {{s.s_id}}
+                </td>
+                <td>
+                    <a href="callto:{{s.guardian_phone}}">{{s.guardian_phone}} </a>
+                </td>
+                <td>
+                    {{s.user.date_joined}} 
+                </td>
+                <td>
+                    {{ s.user.last_login|timesince }}
+                </td>
+                
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+
+{% endblock content %}

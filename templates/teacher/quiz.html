@@ -1,0 +1,42 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+
+<h1>Create a Quiz</h1>
+<form id="quiz-creation-form">
+    <div class="form-group">
+        <label for="quiz-title">Quiz Title:</label>
+        <input type="text" id="quiz-title" name="quiz-title" class="input-field" required>
+    </div>
+
+    <div class="form-group">
+        <label for="question">Question:</label>
+        <input type="text" id="question" name="question" class="input-field" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option-a">Option A:</label>
+        <input type="text" id="option-a" name="option-a" class="input-field" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option-b">Option B:</label>
+        <input type="text" id="option-b" name="option-b" class="input-field" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option-c">Option C:</label>
+        <input type="text" id="option-c" name="option-c" class="input-field" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option-d">Option D:</label>
+        <input type="text" id="option-d" name="option-d" class="input-field" required>
+    </div>
+
+
+    <button type="submit" id="quiz-create-button" class="edit-button">Create Quiz</button>
+</form>
+
+
+{% endblock content %}

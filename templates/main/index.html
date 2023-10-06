@@ -1,0 +1,30 @@
+{% extends 'init/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+{% if user.student.s_approval or user.teacher.t_approval or user.guardian.g_approval  %}
+{% include 'home/sendtodash.html' %}
+
+{% else %}
+
+{% include 'home/approval.html' %}
+
+{% endif %}
+
+{% else %}
+
+{% include 'home/basic.html' %}
+{% include 'home/category.html' %}
+{% include 'home/contact.html' %}
+{% include 'home/review.html' %}
+{% include 'home/blog.html' %}
+
+
+{% endif %}
+
+
+{% endblock content %}

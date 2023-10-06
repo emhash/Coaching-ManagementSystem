@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Radio group component - Responsive CSS</title>
+  <link rel="stylesheet" href="{% static 'css/radio.css' %}">
+
+</head>
+<body>
+
+    {% if user.is_authenticated %}
+    <h1> Can not access this right now. </h1>
+    {% else %}
+
+    
+    <div class="container">
+      <div class="plans">
+        <div class="title">
+            <h3>
+                আপনার অবস্থান নির্ধারণ করুন। 
+            </h3>
+            <br>
+            <h6 style="color : red;">
+                <p>
+                    Warning : If you select wrong role then do not fill the next steps informations. Contact to the admin he/she can fix it. 
+                </p>
+                <p>
+                    সতর্ক বার্তা : 
+                    যদি আপনি ভুলবশত অন্য রুল (আপনার ক্যাটাগরি) সিলেক্ট করে থাকেন এবং পরের ধাপে চলে গিয়ে রেজিস্ট্রেশন করেন, 
+                    তাহলে শেষ ফর্ম পুরন না করে এডমিন এর সাথে যোগাযোগ করুন। তিনি সমাধান করে দিলে ওই ধাপ পুরন করুন। 
+                </p>
+            </h6>
+            <br>
+    
+        </div>
+    
+    
+    
+        <form class="form" id="a-form" action="" method="POST" novalidate>
+            {% csrf_token %}
+        
+            <label class="plan basic-plan">
+                <input checked type="radio" name="role" value="student" id="basic" />
+                <div class="plan-content">
+                    <img loading="lazy" src="{% static 'image/1.jpg' %}" alt="" />
+                    <div class="plan-details">
+                        <span>শিক্ষার্থী </span>
+                        <p>আপনি যদি শিক্ষার্থী হিসেবে ভর্তি হতে ইচ্ছুক হোন তাহলে এখানে সিলেক্ট করুন।  </p>
+                    </div>
+                </div>
+            </label>
+        
+            <label class="plan complete-plan">
+                <input type="radio" id="complete-teacher" name="role" value="teacher" />
+                <div class="plan-content">
+                    <img loading="lazy" src="{% static 'image/2.jpg' %}" alt="" />
+                    <div class="plan-details">
+                        <span>শিক্ষক </span>
+                        <p>শিক্ষক হিসেবে সংযুক্ত হতে সিলেক্ট করুন। </p>
+                    </div>
+                </div>
+            </label>
+            
+            <label class="plan complete-plan">
+                <input type="radio" id="complete-guardian" name="role" value="guardian" />
+                <div class="plan-content">
+                    <img loading="lazy" src="{% static 'image/3.jpg' %}" alt="" />
+                    <div class="plan-details">
+                        <span>অভিবাবক </span>
+                        <p>আপনার বাচ্চার অগ্রগতি ও অন্যান্য বিষয় জানতে সিলেক্ট করে সংযুক্ত হোন। </p>
+                    </div>
+                </div>
+            </label>
+        
+            <input type="submit" value="NEXT" style="margin-top: 20px; color: #fff; background-color: #4B70E2; border: none; border-radius: 25px; padding: 10px 20px; font-weight: bold; font-size: 16px; letter-spacing: 1.15px; box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #f9f9f9; outline: none; cursor: pointer;">
+        </form>
+        
+    
+      </div>
+    </div>
+    
+    {% endif %}
+
+</body>
+</html>

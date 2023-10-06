@@ -1,0 +1,163 @@
+{% extends 'student/dash_base.html' %}
+{% load static %}
+{% block content %}
+
+
+    <div class="header">
+        <div class="left">
+            <h1>ড্যাশবোর্ড</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">
+                        বিস্তারিত
+                    </a></li>
+                
+            </ul>
+        </div>
+        <a href="#" class="report">
+            <i class='fa fa-download'></i>
+            <span>তোমার আইডি কার্ড Download করো</span>
+        </a>
+    </div>
+
+    <div class="analyse">
+
+        <div class="sales">
+            <a href="{% url "student_dashb" 'mark' %}">
+                <div class="status">
+                    <div class="info">
+                        <h3>Your result</h3>
+                        <h1>রেজাল্ট</h1>
+                    </div>
+                    <div class="progresss">
+                        <img src="{% static "image/result.png" %}" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="sales">
+            <a href="">
+                <div class="status">
+                    <div class="info">
+                        <h3>পরীক্ষা সিডিউল</h3>
+                        <h1>পরীক্ষা </h1>
+                    </div>
+                    <div class="progresss">
+                        <img src="{% static "image/book.png" %}" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+    
+        <div class="sales">
+            <a href="">
+                <div class="status">
+                    <div class="info">
+                        <h3>কুইজ এখন</h3>
+                        <h1>কুইজ</h1>
+                    </div>
+                    <div class="progresss">
+                        <img src="{% static "image/quiz.png" %}" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+    
+        <div class="sales">
+            <a href="">
+                <div class="status">
+                    <div class="info">
+                        <h3>বাড়ির কাজ </h3>
+                        <h1>কাজ</h1>
+                    </div>
+                    <div class="progresss">
+                        <img src="{% static "image/hw.png" %}" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+    
+        <div class="sales">
+            <a href="">
+                <div class="status">
+                    <div class="info">
+                        <h3>সব বিষয়</h3>
+                        <h1>রুটিন</h1>
+                    </div>
+                    <div class="progresss">
+                        <img src="{% static "image/routine.png" %}" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+    
+    
+    
+    </div>
+
+
+
+
+    <div class="bottom-data">
+        <div class="orders">
+            <div class="header">
+                <i class='fa fa-receipt'></i>
+                <h3>আজকের নোটিশ!</h3>
+                
+            </div>
+            <marquee behavior="scroll" direction="left">
+                <h1 style="color: #ff0033;">আজকে বাংলা ক্লাস হবে না।</h1>
+            </marquee>
+            <marquee behavior="scroll" direction="left">
+                <h1 style="color: #ff0033;">আজকে গনিত ক্লাস হবে না।</h1>
+            </marquee>
+            <marquee behavior="scroll" direction="left">
+                <h1 style="color: #ff0033;">আজকে রসায়ন ক্লাস হবে না।</h1>
+            </marquee>
+            <marquee behavior="scroll" direction="left">
+                <h1 style="color: #ff0033;">আজকে শারিরিক শিক্ষা ক্লাস হবে না।</h1>
+            </marquee>
+            <marquee behavior="scroll" direction="left">
+                <h1 style="color: #ff0033;">আজকে তোমার ক্লাস হবে না।</h1>
+            </marquee>
+            <marquee behavior="scroll" direction="left">
+                <h1 style="color: #ff0033;">আজকে কিছুই হবে না।</h1>
+            </marquee>
+        </div>
+
+
+        <!-- Reminders -->
+        <div class="reminders">
+            <div class="header">
+                <i class='fa fa-note'></i>
+                <h3>Remiders</h3>
+                
+            </div>
+            <ul class="task-list">
+                <li class="completed">
+                    <div class="task-title">
+                        <i class='fa fa-check-circle'></i>
+                        <p>কালকের ক্লাস আজকে </p>
+                    </div>
+                    <i class='fa fa-dots-vertical-rounded'></i>
+                </li>
+                <li class="completed">
+                    <div class="task-title">
+                        <i class='fa fa-check-circle'></i>
+                        <p>গনিত বাড়ির কাজ ৫.৮.২০২৩ জমা </p>
+                    </div>
+                    <i class='fa fa-dots-vertical-rounded'></i>
+                </li>
+                <li class="not-completed">
+                    <div class="task-title">
+                        <i class='fa fa-x-circle'></i>
+                        <p>শিক্ষা সফর 7AM 7 october.</p>
+                    </div>
+                    <i class='fa fa-dots-vertical-rounded'></i>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+{% endblock content %}

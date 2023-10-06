@@ -1,0 +1,47 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+
+{% for m in messages %}
+    <div class="message-box">
+        {{ m }}
+        <span class="close-button" onclick="this.parentElement.style.display='none'">close</span>
+    </div>
+{% endfor %}
+
+
+ <h1>আপনার ড্যাশবোর্ড</h1>
+
+
+ <div class="analyse">
+    {% if exam %}
+    
+    {% for e in exam %}
+    <div class="sales">
+        
+        <a href="{% url "add_mark4" shift cls subject e.exam_name %}">
+            <div class="status">
+                <div class="info">
+                    <h3>Select Type </h3>
+                    <h1>{{e.exam_name}}</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/exam.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+
+    {% else %}
+
+    <br><br>
+    <h3>
+        দুঃখিত এই পর্যায়ে আপনার জন্য কোনো তথ্য পাওয়া যায় নি । 
+    </h3>
+    {% endif %}
+</div>
+
+
+
+{% endblock content %}

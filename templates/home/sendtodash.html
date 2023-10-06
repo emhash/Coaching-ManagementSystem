@@ -1,0 +1,52 @@
+<section class="category" id="dashboard">
+
+    <div class="heading">
+        
+        <span>শুধু আপনার জন্য</span>
+        <h3>আপনার নিজস্ব ড্যাশবোর্ড</h3>
+    </div>
+    
+    {% if user.role == "student" %}
+    <div class="box-container">
+        <a href="{% url 'student_dashb' 'home' %}">
+
+            <div class="box">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3> ড্যাশবোর্ড </h3>
+                <p>এখানে ক্লিক করার পর আপনার জন্য তৈরি ড্যাশবোর্ড এ প্রবেশ করতে পারবেন।</p>
+            </div>
+
+        </a>
+    </div>
+    {% endif %}
+
+    {% if user.role == "teacher" %}
+    <div class="box-container">
+        <a href="{% url 'teacher_dashb' 'home' %}">
+
+            <div class="box">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3> ড্যাশবোর্ড </h3>
+                <p>এখানে ক্লিক করার পর আপনার ড্যাশবোর্ড এ প্রবেশ করতে পারবেন।</p>
+            </div>
+
+        </a>
+    </div>
+    {% endif %}
+
+
+    {% if user.role == "guardian" %}
+    <div class="box-container">
+        <a href="{% url 'guardian_dashb' 'home' %}">
+
+            <div class="box">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3> ড্যাশবোর্ড </h3>
+                <p>এখানে ক্লিক করার পর আপনার ড্যাশবোর্ড এ প্রবেশ করতে পারবেন</p>
+            </div>
+
+        </a>
+    </div>
+    {% endif %}
+
+</section>

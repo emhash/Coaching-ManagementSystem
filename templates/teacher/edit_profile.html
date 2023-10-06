@@ -1,0 +1,65 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="recent-orders ">
+  {% for m in messages %}
+  <div class="message-box">
+      {{ m }}
+      <span class="close-button" onclick="this.parentElement.style.display='none'">close</span>
+  </div>
+{% endfor %}
+
+
+  <h1>Edit Your Profile</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for f in form %}
+    
+    {{f.label_tag}}
+    {{f}}
+    
+    {% endfor %}
+
+    
+{% comment %}     
+      {{ form.t_name.label_tag }}
+      {{ form.t_name }}
+      
+    
+      {{ form.profile_pic.label_tag }}
+      {{ form.profile_pic }}
+      <small class="text-muted">Profile Picture</small>
+    
+      {{ form.teacher_background.label_tag }}
+      {{ form.teacher_background }}
+      
+    
+      {{ form.t_present_adress.label_tag }}
+      {{ form.t_present_adress }}
+      
+    
+      {{ form.t_permnt_adress.label_tag }}
+      {{ form.t_permnt_adress }}
+      
+    
+      {{ form.t_extra_phone.label_tag }}
+      {{ form.t_extra_phone }}
+{% endcomment %}
+    
+    <button type="submit" class="edit-button">Save Changes</button>
+    
+  </form>
+
+  {% comment %} <img src="{{ request.user.teacher.profile_pic.url }}" alt="profile"> {% endcomment %}
+  <a style="color: red;" href="{% url 'change_password' %}">
+    <i class="material-icons-sharp" >lock</i> RESET PASSWORD
+  </a>
+  
+
+
+</div>
+{% endblock content %}

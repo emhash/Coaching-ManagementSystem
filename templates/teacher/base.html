@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/tdash.css" %}">
+    <title>Teacher | dashboard</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="{% static "image/coaching.png" %}">
+                    <h2>CS<span class="danger">Dash</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+
+
+               {% url 'teacher_dashb' page='home' as home %}  
+               {% url 'teacher_dashb' page='add_mark' as add_mark %}  
+               {% url 'teacher_dashb' page='msg' as msg %}  
+               {% url 'teacher_dashb' page='apply_leave' as apply_leave %}  
+               {% url 'teacher_dashb' page='all_setting' as all_setting %}  
+               {% url 'teacher_dashb' page='hw' as hw %}  
+               {% url 'teacher_dashb' page='your_student' as your_student %}  
+               {% url 'teacher_dashb' page='wallet' as wallet %}  
+                                
+
+               <a {% if request.path == home %}class="active"{% endif %} href="{% url 'teacher_dashb' page='home' %}">
+                  <span class="material-icons-sharp">
+                     dashboard
+                  </span>
+                  <h3>ড্যাশবোর্ড</h3>
+              </a> 
+        
+               <a {% if request.path == add_mark %}class="active"{% endif %} href="{% url 'teacher_dashb' page='add_mark' %}">
+                   <span class="material-icons-sharp">
+                     inventory
+                   </span>
+                   <h3>মার্কস প্রদান</h3>
+               </a>
+    
+               <a {% if request.path == your_student %}class="active"{% endif %} href="{% url "teacher_dashb" page='your_student' %}">
+                    <span class="material-icons-sharp">
+                        person_outline
+                    </span>
+                    <h3>শিক্ষার্থীরা</h3>
+
+                </a>
+
+           
+               <a {% if request.path == msg %}class="active"{% endif %} href="{% url 'teacher_dashb' page='msg' %}">
+                   <span class="material-icons-sharp">
+                       mail_outline
+                   </span>
+                   <h3>বার্তা</h3>
+                   <span class="message-count">27</span>
+               </a>
+               
+               <a {% if request.path == apply_leave %}class="active"{% endif %} href="{% url 'teacher_dashb' page='apply_leave' %}">
+                   <span class="material-icons-sharp">
+                     receipt_long
+                   </span>
+                   <h3>ছুটির আবেদন</h3>
+               </a>
+               <a {% if request.path == all_setting %}class="active"{% endif %} href="{% url 'teacher_dashb' page='all_setting' %}">
+                   <span class="material-icons-sharp">
+                       settings
+                   </span>
+                   <h3>সেটিংস্</h3>
+               </a>
+               <a {% if request.path == wallet %}class="active"{% endif %} href="{% url 'teacher_dashb' page='wallet' %}">
+                <span class="material-icons-sharp">
+                    account_balance_wallet
+                </span>
+                   <h3>ওয়ালেট</h3>
+               </a>
+               <a {% if request.path == hw %}class="active"{% endif %} href="{% url 'teacher_dashb' page='hw' %}">
+                   <span class="material-icons-sharp">
+                       add
+                   </span>
+                   <h3>বাড়ির কাজ দিন</h3>
+               </a>
+               <a href="{% url "logout" %}">
+                   <span class="material-icons-sharp">
+                       logout
+                   </span>
+                   <h3>লগ আউট</h3>
+               </a>
+           </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            {% block content %}{% endblock content %}
+
+        </main>
+        <!-- End of Main Content -->
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">
+                        menu
+                    </span>
+                </button>
+                <div class="dark-mode">
+                    <span class="material-icons-sharp active">
+                        light_mode
+                    </span>
+                    <span class="material-icons-sharp">
+                        dark_mode
+                    </span>
+                </div>
+                
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>{{request.user.teacher.t_name}}</b></p>
+                        <small class="text-muted">Teacher</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="{{request.user.teacher.profile_pic.url}}">
+                    </div>
+                </div> 
+                
+            </div>
+            <!-- End of Nav -->
+
+            <div class="user-profile">
+                <div class="logo">
+                    <img src="{% static "image/coaching.png" %}">
+                    <h2>আমাদের কোচিং</h2>
+                    <p>সফলতার দৃঢ় প্রতিজ্ঞাবদ্ধ</p>
+                </div>
+            </div>
+            {% block reminder %}{% endblock reminder %}
+        </div>
+
+
+    </div>
+
+    {% comment %} <script src="{% static "js/orders.js" %}"></script> {% endcomment %}
+    <script src="{% static "js/index.js" %}"></script>
+</body>
+
+</html>

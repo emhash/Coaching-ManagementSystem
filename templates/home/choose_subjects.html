@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Choice your subjects </title>
+        <link rel="stylesheet" href="{% static 'css/t.css' %}">       
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+        
+    </head>
+    <body>
+        <div class="the_head">
+            <h1 class="mb-4">এক নজরে তথ্যগুলো।</h1>
+        </div>
+ 
+        <div class="container ">
+            
+            <p>নাম : {{ student_profile.s_name }}</p>
+            <p>আইডি : {{ student_profile.s_id }}</p>
+            <p>অভিবাবকের মোবাইল : {{ student_profile.guardian_phone }}</p>
+            {% comment %} <p>আপনার চয়েস করা বিষয় : {% for subject in student_profile.your_subjects %}{{ subject }}{% if not forloop.last %}, {% endif %}{% endfor %}</p> {% endcomment %}
+            <p style="color:red;">আপনার আইডি টি সংগ্রহ করে রাখুন, যেকোনো প্রয়োজনে আডমিন সহায়তা পেতে সাহায্য করবে। </p>
+
+        <div class="container">
+            </h4>আপনি যে বিষয় গুলোতে ক্লাস করতে ইচ্ছুক অর্থাৎ ভর্তি হতে চান তা নির্ধারণ করুন। </h4>
+        <form action="" method="POST">
+            {% csrf_token %}
+                <div class="select-btn">
+                   
+                    <span class="arrow-dwn">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+        
+                <ul class="list-items">
+        
+                    {% for subject in student_profile.class_subjects.subjects.all %}
+                        <li class="item">
+                            
+                            <input type="checkbox" name="selected_subjects" value="{{ subject.name }}">
+                              
+                            <span class="item-text"> {{ subject.name }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                
+                <input class="imp_btn" type="submit" value="তথ্য নিশ্চিত করুন।">
+                <h4 style="color:red;"> অবশই আপনার প্রদান করা তথ্য সঠিক এবং আপনি যেসব বিষয়ে ক্লাস করতে ইচ্ছুক তা নির্বাচন করুন, এই পেজ এ পুনরায় ফিরে আসার উপায় নেই। যদি ভুল করে থাকেন তাহলে এডমিন কে কল করুন , তিনি ঠিক করতে পারবেন। </h4>
+                
+            </form>
+            
+            </div>
+        
+
+        <script src="{% static 'js/t.js' %}"></script>
+    </body>
+</html>

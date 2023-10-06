@@ -1,0 +1,549 @@
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect,get_object_or_404, HttpResponseRedirect, HttpResponse
+from django.contrib.auth import authenticate, logout, login
+from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm
+# from users.models import Student, Teacher, Guardian,Subjects,SubjectsPerClass
+from users.models import *
+from .more_backend import *
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+# NEED TO DO UP NEXT +====>>
+# Student Profile pic, Teacher, Gurd also. 
+# blog, price and review dynamically change
+# day or evening shift add + dynamically change
+
+
+def home(request):  
+    if request.user.is_authenticated:
+        return redirect('authentication')
+    else:
+        return render(request, 'main/index.html')
+
+@login_required
+def logout_view(request):
+    logout(request)
+
+    return redirect('home')
+
+def userlogin(request):
+    
+    if request.user.is_authenticated :
+        redirect('home')
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')  
+        else:
+            messages.error(request, "Your provided data is not valid")
+    return render(request, 'main/login.html')
+
+def register_role(request):
+    if request.method == 'POST':
+        role = request.POST.get('role')
+        request.session['selected_role'] = role
+        return redirect('registration')
+        
+    return render(request, 'registration/choose_role.html')
+
+def registration(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        role = request.session.get('selected_role')
+        if role:
+            form = CommonRegistrationForm(request.POST or None)
+            context = {
+                'form': form,
+                'role' : role,
+            }
+            if form.is_valid():
+
+                user = form.save(commit=False)
+                user.role = role
+                user.save()
+                
+                if role == 'student':
+                        user_profile = Student(user=user)
+                elif role == 'teacher':
+                    user_profile = Teacher(user=user)
+                elif role == 'guardian':
+                    user_profile = Guardian(user=user)
+                else:
+                    # Handle unsupported role or not essigned
+                    redirect('register_role')
+
+                user_profile.save()
+                login(request, user)  
+                return redirect('home')
+            
+            return render(request, 'main/registration.html', context)
+        else:
+            return redirect('register_role')
+    
+@login_required
+def authentication(request):
+    if request.user.role == 'student':
+        student_profile = Student.objects.get(user=request.user)
+        if student_profile.basic_step_of_reg:
+            if student_profile.choose_subjects:
+                return render(request, 'main/index.html' , {'student_profile' : student_profile})
+            else:
+                if request.method == 'POST':
+                    selected_subjects = request.POST.getlist('selected_subjects')
+                    print("Selected subjects:", selected_subjects)  
+                    student_profile.your_subjects = selected_subjects 
+                    student_profile.choose_subjects = True
+                    
+                    student_profile.save()
+                    return render(request, 'main/index.html')
+                else:
+                    return render(request, 'home/choose_subjects.html', {'student_profile': student_profile})
+        else:
+            student_profile = Student.objects.get(user=request.user)
+            if request.method == 'POST':
+                form = StudentForm(request.POST, instance=student_profile)
+                if form.is_valid():
+                    student_profile.basic_step_of_reg = True
+                    student_profile.s_id = generate_unique_integer_id() 
+                    form.save()
+                    return redirect('home')
+            else:
+                form = StudentForm(instance=student_profile)
+            return render(request, 'registration/register_student.html', {'form': form})  
+
+    elif request.user.role == 'teacher':
+        teacher_profile = Teacher.objects.get(user=request.user)
+        if teacher_profile.basic_step_of_reg:
+            return render(request, 'main/index.html')
+        else:
+            teacher_profile = Teacher.objects.get(user=request.user)
+            if request.method == 'POST':
+                form = TeacherForm(request.POST, instance=teacher_profile)
+                if form.is_valid():
+                    teacher_profile.basic_step_of_reg = True
+                    # teacher_profile.s_id = f"T{generate_unique_integer_id()}"
+                    form.save()
+                    return redirect('home')
+            else:
+                form = TeacherForm(instance=teacher_profile)
+            return render(request, 'registration/register_teacher.html' , {'form' : form})
+        
+    elif request.user.role == 'guardian':
+        guardian_profile = Guardian.objects.get(user=request.user)
+
+        if guardian_profile.basic_step_of_reg:        
+            return render(request, 'main/index.html')
+        else:
+            return render(request, 'registration/register_guardian.html')
+    else:
+        return HttpResponse("NOT A VALID ROLE FOUND FOR YOU")
+
+
+@login_required
+def student_dashb(request, page=None):
+    if request.user.role == 'student':
+        if page == 'feedback':
+            return render(request, 'student/dash_feedback.html')
+        elif page == 'settings':
+            return edit_profile(request)
+
+            
+        elif page == 'message':
+            return render(request, 'student/dash_message.html')
+        elif page == 'class':
+
+            student = request.user.student
+            routine = []
+
+            # student's batch
+            student_batch = student.batch
+
+            if student_batch:
+                # the subjects for the student's class
+                subjects_per_class = student.class_subjects
+
+                if subjects_per_class:
+                    # the subjects related to the student's class
+                    subjects = subjects_per_class.subjects.all()
+
+                    # For each subject, get the routine data
+                    for subject in subjects:
+                        # Filter MakeBatch objects based on both batch and class
+                        data = MakeBatch.objects.filter(batch=student_batch, class_name=subjects_per_class, subject=subject)
+                        print(data)
+                        if data:
+                            routine.append(data)
+
+            context = {'routine': routine}
+            return render(request, 'student/dash_class.html', context)
+
+
+
+        elif page == 'change_password':
+            return change_password(request)
+        elif page == 'mark':
+            exam_id = request.GET.get('exam_id')  
+            print(exam_id)
+            exam = CreateExam.objects.all()
+            # marks = MarksOfStudent.objects.filter(exam_type=exam_id)
+            marks =[]
+
+            if exam_id:
+                marks = MarksOfStudent.objects.filter(exam_type=exam_id, student_id = request.user.student.s_id)
+                for m in marks:
+                    the_grade = calculate_grade(m.mark, m.exam_type.out_of)
+                    m.the_grade = the_grade
+
+            return render(request, 'student/res.html', {'exam': exam, 'marks': marks})
+
+
+
+
+        elif page == 'result':
+            # print(request.user.student)
+            mark = MarksOfStudent.objects.filter(student_id = request.user.student.s_id)
+            # for m in mark:
+            #     print(m.mark)
+            
+            return render(request, 'student/dash_result.html', context={'marks':mark})
+        else:
+            # Handle invalid page name or other default behavior
+            return render(request, 'student/dash_home.html')
+    else:
+        return render(request, 'main/404.html')
+    
+
+# ----------------------------------- DONE (working on add marks) ------------------------------------------------
+
+def add_mark1(request, shift):
+    try:
+        
+        sft = Shift.objects.get(shift_name=shift)
+        the_batch = Batch.objects.get(shift=sft)
+        ts = Teacher.objects.get(user=request.user)
+        data = MakeBatch.objects.filter(batch=the_batch, teacher=ts)
+        dls = set()
+        for d in data:
+            shft = get_object_or_404(SubjectsPerClass, s_class=d.class_name)
+            dls.add(shft)
+
+        # print(dls)
+        # current_user_teacher = Teacher.objects.get(user=request.user)
+        # # Query the MakeBatch objects related to the selected Shift and teacher
+        # make_batches = MakeBatch.objects.filter(batch__shift=shft, teacher=current_user_teacher)
+
+        return render(request, 'teacher/add_mark1.html', {'data': dls, 'shift': shift})
+
+    except (Shift.DoesNotExist, Batch.DoesNotExist, Teacher.DoesNotExist) as e:
+        return render(request, 'teacher/error.html', {'error_message': 'সিস্টেম এর ত্রুটি ! আপনি যে তথ্য এর রিকুয়েস্ট দিয়েছেন তা হয়ত সিস্টেমে নেই অথবা এই ফাংসন সংযুক্ত করা হয়নি। '})
+
+    except Exception as e:
+        return render(request, 'teacher/error.html', {'error_message': str(e)})
+
+# TWO PROBLEM ---> 
+# 1. 
+# 2. MODELS HAS BUGS WHEN I TRY TO ADD NEW SUBJECT TO TEACHER,
+#    THERE PREVIOUS ADDED SUBJECT WIPED 
+
+def add_mark2(request, shift, cls):
+    try:
+        sft = get_object_or_404(Shift, shift_name=shift)
+        the_batch = get_object_or_404(Batch, shift=sft)
+        ts = Teacher.objects.get(user=request.user)
+        data = MakeBatch.objects.filter(batch=the_batch, teacher=ts, class_name=cls)
+
+        return render(request, 'teacher/add_mark2.html', {'data': data, 'shift': shift, 'c_id': cls})
+
+    except (Shift.DoesNotExist, Batch.DoesNotExist, Teacher.DoesNotExist) as e:
+        return render(request, 'teacher/error.html', {'error_message': 'One or more objects not found.'})
+
+    except Exception as e:
+        return render(request, 'teacher/error.html', {'error_message': str(e)})
+
+
+def add_mark3(request, shift, cls, subject):
+    try:
+        sft = get_object_or_404(Shift, shift_name=shift)
+        the_batch = get_object_or_404(Batch, shift=sft)
+        subj = get_object_or_404(Subjects, name=subject)
+
+        ts = Teacher.objects.get(user=request.user)
+        data = MakeBatch.objects.filter(batch=the_batch, teacher=ts, class_name=cls)
+
+        students = []
+
+        for d in data:
+            # Filtering students according to the current batch
+            batch_students = Student.objects.filter(batch_id=d.batch.id, your_subjects__contains=subj.name, class_subjects=cls)
+            students.extend(batch_students)
+
+        exam = CreateExam.objects.all()
+
+        return render(request, 'teacher/add_mark3.html', {'students': students, 'exam': exam, 'shift': shift, 'cls': cls, 'subject': subject})
+
+    except (Shift.DoesNotExist, Batch.DoesNotExist, Subjects.DoesNotExist, Teacher.DoesNotExist) as e:
+        return render(request, 'teacher/error.html', {'error_message': 'One or more objects not found.'})
+
+    except Exception as e:
+        return render(request, 'teacher/error.html', {'error_message': str(e)})
+
+
+def add_mark4(request, shift, cls, subject, exam):
+    try:
+        sft = get_object_or_404(Shift, shift_name=shift)
+        the_batch = get_object_or_404(Batch, shift=sft)
+        subj = get_object_or_404(Subjects, name=subject)
+
+        ts = Teacher.objects.get(user=request.user)
+        data = MakeBatch.objects.filter(batch=the_batch, teacher=ts, class_name=cls)
+        marks_dict = {}
+      
+        for d in data:
+            batch_students = Student.objects.filter(batch_id=d.batch.id, your_subjects__contains=subj.name, class_subjects=cls)
+            
+            for student in batch_students:
+                try:
+                    the_exam = CreateExam.objects.get(exam_name=exam)  
+                    mark = MarksOfStudent.objects.get(batch=the_batch, std=student, subject=subject, exam_type=the_exam)
+                    the_mark = mark.mark
+                    
+                    the_grade = calculate_grade(mark.mark, the_exam.out_of)
+
+                    marks_dict[student.s_id] = [the_mark, the_grade]
+                except MarksOfStudent.DoesNotExist:
+                    marks_dict[student.s_id] = [None, None]
+                
+                # With this, we can assign a new temp field to a query set. so now we can use 'student.marking'
+                student.marking = marks_dict
+
+        if request.method == "POST":
+            std_mark = request.POST.get('marks')
+            std_id = request.POST.get('sid')
+            std_name = request.POST.get('s_name')
+
+            the_student = Student.objects.get(batch_id=d.batch.id, s_id=std_id, your_subjects__contains=subj.name, class_subjects=cls)
+            the_exam = CreateExam.objects.get(exam_name=exam)
+
+            # Check if marks already exist for the student and exam
+            try:
+                mark_table = MarksOfStudent.objects.get(batch=the_batch, std=the_student, subject=subject, exam_type=the_exam)
+                mark_table.mark = std_mark
+
+            except MarksOfStudent.DoesNotExist:
+                mark_table = MarksOfStudent.objects.create(batch=the_batch, std=the_student, student_id=std_id, subject=subject, exam_type=the_exam, mark=std_mark)
+            
+            mark_table.save()
+            return redirect('add_mark4', shift=shift, cls=cls, subject=subject, exam=exam)
+
+        return render(request, 'teacher/add_mark4.html', {'students': batch_students, 'mark_dict': marks_dict })
+
+    except (Shift.DoesNotExist, Batch.DoesNotExist, Subjects.DoesNotExist, Teacher.DoesNotExist) as e:
+        return render(request, 'teacher/error.html', {'error_message': 'One or more objects not found.'})
+
+    except Exception as e:
+        return render(request, 'teacher/error.html', {'error_message': str(e)})
+
+
+
+# ----------------------------------------------------------------------------------
+
+
+@login_required
+def teacher_dashb(request, page=None):
+    if request.user.role == 'teacher':
+        if page == 'add_mark':
+            shift = Shift.objects.all()
+
+            return render(request, 'teacher/add_mark.html', {'data':shift})
+        
+        elif page == 'msg':
+            return render(request, 'teacher/msg.html')
+        
+        elif page == 'apply_leave':
+            return render(request, 'teacher/apply_leave.html')
+        
+        elif page == 'all_setting':
+            return redirect('edit_profile')
+        
+        elif page == 'hw':
+            return render(request, 'teacher/hw.html')
+        
+        elif page == 'quiz':
+            return render(request, 'teacher/quiz.html')
+        
+        elif page == 'your_student':
+
+            # batch_students = Student.objects.filter(batch_id=d.batch.id, your_subjects__contains=subj.name, class_subjects=cls)
+            batch_of_teacher = MakeBatch.objects.filter(teacher = request.user.teacher)
+            
+            your_students = set()
+
+            for b in batch_of_teacher:
+                subj = get_object_or_404(Subjects, name=b.subject)
+                cls = get_object_or_404(SubjectsPerClass, s_class=b.class_name)
+                the_student = Student.objects.filter(batch_id=b.batch.id, 
+                                                     your_subjects__contains=subj.name, 
+                                                     class_subjects=cls
+                                                    ).order_by('created_at')
+                
+                for s in the_student:
+                    # print(s.created_at)
+                    your_students.add(s)
+
+            # print(your_students)
+            
+            return render(request, 'teacher/your_student.html', {'students':your_students})
+        
+        elif page == 'wallet':
+            return render(request, 'teacher/wallet.html')
+        
+        elif page == 'routine':
+            routine = MakeBatch.objects.filter(teacher = request.user.teacher)
+            return render(request, 'teacher/routine.html', {'routine':routine})
+        
+        elif page == 'your_subject':
+            sub = MakeBatch.objects.filter(teacher = request.user.teacher)
+            return render(request, 'teacher/your_subject.html', {'subs':sub})
+        
+        else:
+            
+            batch_of_teacher = MakeBatch.objects.filter(teacher=request.user.teacher)
+            your_students = set()
+
+            for b in batch_of_teacher:
+                subj = get_object_or_404(Subjects, name=b.subject)
+                cls = get_object_or_404(SubjectsPerClass, s_class=b.class_name)
+                the_student = Student.objects.filter(
+                    batch_id=b.batch.id,
+                    your_subjects__contains=subj.name,
+                    class_subjects=cls
+                ).order_by('created_at')
+
+                for s in the_student:
+                    your_students.add(s)
+
+            items_per_page = 6  
+            paginator = Paginator(list(your_students), items_per_page)
+            page_number = request.GET.get('page')
+            current_page = paginator.get_page(page_number)
+
+            return render(request, 'teacher/dashboard.html', {'newuser': current_page})
+
+    else:
+        return render(request, 'main/404.html')
+
+
+
+# -------------------DONE ( Settings for Teacher )----------------------
+from .forms import TeacherProfileForm,PassChangeForm
+from django.contrib import messages
+
+
+
+@login_required
+def change_password(request):
+    if request.user.role == 'student':
+
+        if request.method == 'POST':
+
+            form = PassChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                messages.success(request, 'WELL DONE! আপনার পাসওয়ার্ড সফল ভাবে পরিবর্তন হয়েছে')
+                login(request, user)
+                return redirect('change_password')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+        else:
+            form = PassChangeForm(request.user)
+        
+        return render(request, 'student/change_password.html', {'form': form})
+
+
+    elif request.user.role == 'teacher':    
+        if request.method == 'POST':
+            form = PassChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                messages.success(request, 'আপনার পাসওয়ার্ড সফল ভাবে পরিবর্তন হয়েছে')
+                login(request, user)
+                return redirect('tchr_dashboard_home')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+        else:
+            form = PassChangeForm(request.user)
+        
+        return render(request, 'teacher/change_password.html', {'form': form})
+    
+    
+    # elif request.user.role == 'guardian':    
+
+@login_required
+def edit_profile(request):
+    if request.user.role == 'student':
+        student = request.user.student
+
+        if request.method == 'POST':
+            form = StudentEditForm(request.POST, request.FILES, instance=student)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your profile was successfully updated.')
+                
+                return redirect('edit_profile')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+        else:
+            form = StudentEditForm(instance=student)
+        
+        return render(request, 'student/dash_settings.html', {'form': form, 'student': student})
+
+    if request.user.role == 'teacher':
+        teacher = request.user.teacher
+
+        if request.method == 'POST':
+            form = TeacherProfileForm(request.POST, request.FILES, instance=teacher)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your profile was successfully updated.')
+                
+                return redirect('edit_profile')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+        else:
+            form = TeacherProfileForm(instance=teacher)
+        
+        return render(request, 'teacher/edit_profile.html', {'form': form, 'teacher': teacher})
+
+
+#  -------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+# NOT DEVELOPED YET .
+def guardian_dashb(request, page):
+    if page == 'home':
+        HttpResponse("OK GUARDIAN")
+    else:
+        return render(request, 'dash.html')
+    
+
+
+def temp(request):
+    return render(request, 'temp.html')

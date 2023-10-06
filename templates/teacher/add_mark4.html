@@ -1,0 +1,67 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+
+{% for m in messages %}
+    <div class="message-box">
+        {{ m }}
+        <span class="close-button" onclick="this.parentElement.style.display='none'">close</span>
+    </div>
+{% endfor %}
+
+
+<h1>আপনার ড্যাশবোর্ড</h1>
+<hr>
+
+<h3 style = "color:red;">WARNING : কোনো শিক্ষার্থীর মার্ক দেওয়ার পর তা মুছে সেভ দিবেন না । যদি ওই শিক্ষার্থীর ওই বিষয়ের মার্ক মুছে দিতে চান তবে তা ০ (শুন্য) লিখে সেভ করুন।</h3>
+<div class="recent-orders">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student Name</th>
+                <th>Guardian Number</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            {% for s in students %}
+            <tr>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="sid" value="{{ s.s_id }}">
+                    <input type="hidden" name="s_name" value="{{ s.s_name }}">
+                    <td>{{ s.s_id }}</td>
+                    <td>{{ s.s_name }}</td>
+                    <td>{{ s.guardian_phone }}</td>
+                    <td>
+                        {% for key, value in mark_dict.items %}
+
+                        {% if key == s.s_id %}
+                        <input class="input-field" type="number" name="marks" value="{{ value.0 }}" placeholder="None">
+                    </td>
+                    <td>{{ value.1 }}</td>
+
+                    {% endif %}
+                    {% endfor %}                       
+                    
+                    <td>
+                        <button style="margin-top : 0px;" class="edit-button" type="submit">SAVE</button>
+                    </td>
+                </form>
+            </tr>
+            {% empty %}
+            
+            <tr>
+                <td colspan="5"><h2>দুঃখিত এই বিষয় টিতে আপনার কোনো শিক্ষার্থী নেই</h2></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<h1>আপনার ড্যাশবোর্ড</h1>
+<!-- Analyses -->
+<div class="analyse">
+    {% for s in data %}
+    <div class="sales">
+        <a href="{% url "add_mark1" s.shift_name %}">
+            <div class="status">
+                <div class="info">
+                    <h3>যে শিফটে পড়ান</h3>
+                    <h1>{{s.shift_name}}</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/shift.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

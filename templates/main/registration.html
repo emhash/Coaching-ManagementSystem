@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'css/sup.css' %}">
+</head>
+<body>
+  <div class="main">
+    <div class="container a-container" id="a-container">
+
+      <form class="form" id="a-form" action="" method="POST" novalidate>
+        {% csrf_token %}
+        <h2 class="form_title title">{{role|title}} অ্যাকাউন্ট তৈরি করুন </h2>
+        <p>অথবা অ্যাকাউন্ট থাকলে এখানে <span class="form__span"><a href=""> লগইন করুন</a> </span></p>
+        
+    
+        {% for field in form %}
+                      
+          {% comment %} {{field.label_tag}} {% endcomment %}
+          {{field}}
+      
+          {% comment %} IF ERROR COMES {% endcomment %}
+          {% if field.errors %}
+          <p style="color: red;">{{ field.errors.as_text }}</p>
+          {% endif %}
+          {% comment %}  {% endcomment %}
+      
+          {% endfor %}
+      
+          {% comment %} IF NON FIELD ERROR APPEAR {% endcomment %}
+      
+          {% if form.non_field_errors %}
+          <div>
+              {% for error in form.non_field_errors %}
+              <p style="color: red;">{{ error }}</p>
+              {% endfor %}
+          </div>
+          {% endif %}
+          
+          <input type="submit" value="REGISTER" style="color: #fff; background-color: #4B70E2; border: none; border-radius: 25px; padding: 10px 20px; font-weight: bold; font-size: 16px; letter-spacing: 1.15px; box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #f9f9f9; outline: none; cursor: pointer;">
+
+          
+      </form>
+
+    </div>
+
+  </div>
+  <script src=" {% static 'js/sup.js' %} "></script>
+</body>
+</html>

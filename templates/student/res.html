@@ -1,0 +1,126 @@
+{% extends 'student/dash_base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+
+    /* Style for the form container */
+    .form-container {
+        text-align: center;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Style for the label */
+    .form-container label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+    }
+    
+    /* Style for the select dropdown */
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #fff;
+        color: #333;
+        transition: border-color 0.3s ease;
+    }
+    
+    .form-container select:hover,
+    .form-container select:focus {
+        border-color: #007bff;
+    }
+    
+    /* Style for the FIND button */
+    .form-container button[type="submit"] {
+        margin-top : 7px;
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .form-container button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    
+
+</style>
+
+
+
+<h1>আপনার ড্যাশবোর্ড</h1>
+
+<div class="form-container">
+    <form method="GET" action="">
+        <label for="examType">Select Exam Type:</label>
+        <select id="examType" name="exam_id">
+            <option value="">Select an exam type</option>
+            {% for e in exam %}
+            <option value="{{ e.id }}">{{ e.exam_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">FIND</button>
+    </form>
+</div>
+
+<!-- Display marks below the selected exam type -->
+{% if marks %}
+
+    <div class="bottom-data">
+        <div class="orders">
+            <div class="header">
+                <i class='fa fa-receipt'></i>
+                <h3>All Published Result</h3>
+                <i class='fa fa-filter'></i>
+                <i class='fa fa-search'></i>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Mark</th>
+                        <th>Out of</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in marks %}
+                    
+                    <tr>
+                        
+                        <td>{{m.subject}}</td>
+                        <td>{{m.mark}}</td>
+                        <td>{{m.exam_type.out_of}}</td>
+                        <td>{{m.the_grade}}</td>
+                    </tr>
+        
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% else %}
+<br><br>
+<h3>
+    দুঃখিত এই পর্যায়ে আপনার জন্য কোনো তথ্য পাওয়া যায় নি ।
+</h3>
+{% endif %}
+
+<br><br>
+
+{% endblock content %}

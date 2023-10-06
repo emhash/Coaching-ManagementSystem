@@ -1,0 +1,187 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .time-since {
+      font-size: 12px; /* Adjust the size as needed */
+      color: #333; /* Change the color to your desired color */
+      vertical-align: middle; /* Align the text vertically with the icon */
+    }
+</style>
+
+  
+<h1>আপনার ড্যাশবোর্ড</h1>
+
+{% for m in messages %}
+    <div class="message-box">
+        {{ m }}
+        <span class="close-button" onclick="this.parentElement.style.display='none'">close</span>
+    </div>
+{% endfor %}
+
+
+<div class="analyse">
+
+    <div class="sales">
+        <a href="{% url "teacher_dashb" 'your_subject' %}">
+            <div class="status">
+                <div class="info">
+                    <h3>যেসব বিষয় পড়ান</h3>
+                    <h1>বিষয়</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/book.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="sales">
+        <a href="{% url "teacher_dashb" 'quiz' %}">
+            <div class="status">
+                <div class="info">
+                    <h3>কুইজ নিন এখন</h3>
+                    <h1>কুইজ</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/quiz.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="sales">
+        <a href="{% url "teacher_dashb" 'hw' %}">
+            <div class="status">
+                <div class="info">
+                    <h3>বাড়ির কাজ দিন</h3>
+                    <h1>কাজ</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/hw.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="sales">
+        <a href="{% url "teacher_dashb" 'routine' %}">
+            <div class="status">
+                <div class="info">
+                    <h3>যেসব বিষয় পড়ান</h3>
+                    <h1>Routine</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/routine.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+
+</div>
+<!-- End of Analyses -->
+
+<!-- New Users Section -->
+<div class="new-users">
+    <h2>New Users</h2>
+    <div class="user-list">
+
+        {% for usr in newuser %}
+        
+        <div class="user">
+            <img src="{{usr.profile_pic.url}}">
+            <h2>{{usr.s_name}}</h2>
+            {% if usr.user.is_active_now %}
+            <i class="fas fa-circle text-success"></i> Active Now
+            {% else %}
+                {% if usr.user.last_login %}
+                <p>
+                    <i style="font-size: 13px; color: red; vertical-align: middle; margin-right: 2px; " class="material-icons-sharp">access_time</i>
+                    <span class="time-since">{{ usr.user.last_login|timesince }} ago</span>
+                </p>
+                {% else %}
+                <p>Never logged in</p>
+                {% endif %}
+            {% endif %}
+
+        </div>
+  
+        {% endfor %}
+
+        <div class="user" >
+            <a href="{% url "teacher_dashb" 'your_student' %}" style="display: flex; flex-direction: column; align-items: center;">
+                <i class="material-icons-sharp">add</i>
+                <p>show more</p>
+            </a>
+        </div>
+        
+
+    </div>
+</div>
+<!-- End of New Users Section -->
+
+{% endblock content %}
+
+{% block reminder %}
+
+<div class="reminders">
+    <div class="header">
+        <h2>Reminders</h2>
+        <span class="material-icons-sharp">
+            notifications_none
+        </span>
+    </div>
+
+    <div class="notification">
+        <div class="icon">
+            <span class="material-icons-sharp">
+                volume_up
+            </span>
+        </div>
+        <div class="content">
+            <div class="info">
+                <h3>৯ম এর ক্লাস</h3>
+                <small class="text_muted">
+                    08:00 AM - 12:00 PM
+                </small>
+            </div>
+            <span class="material-icons-sharp">
+                more_vert
+            </span>
+        </div>
+    </div>
+
+    <div class="notification deactive">
+        <div class="icon">
+            <span class="material-icons-sharp">
+                edit
+            </span>
+        </div>
+        <div class="content">
+            <div class="info">
+                <h3>৫ম এর ক্লাস</h3>
+                <small class="text_muted">
+                    08:00 AM - 12:00 PM
+                </small>
+            </div>
+            <span class="material-icons-sharp">
+                more_vert
+            </span>
+        </div>
+    </div>
+
+    <div class="notification add-reminder">
+        <div>
+            <span class="material-icons-sharp">
+                add
+            </span>
+            <h3>Add Reminder</h3>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock reminder %}

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guardian Registration</title>
+</head>
+<body>
+    <h1>Guardian Registration</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    <a href="{% url 'logout' %}"><input type="button" value="LOGOUT" style="color: #red; background-color: #4B70E2; border: none; border-radius: 25px; padding: 10px 20px; font-weight: bold; font-size: 16px; letter-spacing: 1.15px; box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #f9f9f9; outline: none; cursor: pointer;"></a>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends 'student/dash_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="recent-orders">
+  {% for m in messages %}
+  <div class="message-box">
+    {{ m }}
+    <span class="close-button" onclick="this.parentElement.style.display='none'"></span>
+  </div>
+  {% endfor %}
+  <h1>তোমার প্রোফাইল এর তথ্য সংযুক্ত করো অথাবা পরিবর্তন করো।</h1>
+  <span style="color:red;"><h3>(অযথা না বুঝে কোনো কিছু পরিবর্তন করবে না)</h3></span>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+  {% for f in form  %}
+  {{ f.label_tag }}
+  {{ f }}
+  
+  {% endfor %}
+  <p>তোমার আইডি</p>
+    <input class="input-field" type="text" value="{{user.student.s_id}}" disabled>
+  <p>শিফট</p>
+    <input class="input-field" type="text" value="{{user.student.shift}}" disabled>
+  <p>তোমার ব্যাচ</p>
+    <input class="input-field" type="text" value="{{user.student.batch.batch_name}}" disabled>
+  <p>তোমার ক্লাস</p>
+    <input class="input-field" type="text" value="{{user.student.class_subjects}}" disabled>
+  <p>অভিভাবক এর নাম্বার</p>
+    <input class="input-field" type="text" value="{{user.student.guardian_phone}}" disabled>
+  
+    <button type="submit" class="edit-button">পরিবর্তন সেভ করো</button>
+  </form>
+  
+
+</div>
+<br>
+
+  <a style="color: red; margin-left:30px;" href="{% url "change_password" %}">
+    <i class="fa fa-lock"></i> RESET PASSWORD
+  </a>
+
+  <br>
+  <br>
+{% endblock content %}
