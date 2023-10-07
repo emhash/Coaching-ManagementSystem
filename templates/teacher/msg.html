@@ -2,6 +2,54 @@
 {% load static %}
 {% block content %}
 
+<style>
+    
+
+
+    .the_box_uv {
+        background-color: #f0f0f0; 
+        padding: 10px;
+        border: 1px solid #ccc; 
+        border-radius: 5px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .material-icons-sharp {
+        font-size: 20px; 
+        float:left;
+        margin-right: 0px;
+    }
+    
+    
+    .sign {
+        background-color: #ff5733;
+        color: #fff;
+        padding: 5px 10px; 
+        border-radius: 5px; 
+        font-weight: bold;
+    }
+    
+    
+    .the_box_v{
+        background-color: rgba(52, 68, 71, 0.555); 
+        padding: 10px;
+        border: 1px solid #ccc; 
+        border-radius: 5px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .viewed{
+        padding: 5px 10px; 
+    }
+    
+    </style>
+    
+
 <h1>আপনার জন্য সকল বার্তা </h1>
 
 <div class="recent-orders">
@@ -10,17 +58,14 @@
     {% for m in all_message %}
     {% if m.visited == False %}
     
+
     <div>
-
         <a  href="{% url "seen_message" m.id %}">
-
             <div class="the_box_uv">
-            <span class="material-icons-sharp">
-                arrow_right
-            </span>
-            <span class="material-icons-sharp">
-                inbox
-            </span>
+            
+                <span class="material-icons-sharp">
+                    <i class='bx bxs-message-alt-dots bx-tada'></i>
+                </span>
                 
                 {{m.headline}}
                 <span class="sign">NEW</span>
@@ -29,24 +74,27 @@
 
     </div>
  
+
+
+ 
     {% else %}
 
-
     <div>
+        <a href="{% url "seen_message" m.id %}" >
+            <div class="the_box_v">
+                <span class="material-icons-sharp">
+                    <i class='bx bxs-message-alt-dots bx-tada'></i>
+                </span>
 
-        <div class="the_box_v">
-
-            <a href="{% url "seen_message" m.id %}" style = "color:green;" class="input-field ">
                 {{m.headline}}
-            <span class="material-icons-sharp">
-                done_outline
-            </span>
+                <span class="viewed">
+                    <i class='bx bx-check-double'></i>
+                </span>
                 
-            </a>
-
-        </div>
-
+            </div>
+        </a>
     </div>
+
     {% endif %}
     
     {% endfor %}

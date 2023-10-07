@@ -6,7 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <link rel="stylesheet" href="{% static "css/tdash.css" %}">
     <title>Teacher | dashboard</title>
 </head>
@@ -22,7 +24,7 @@
                     <h2>CS<span class="danger">Dash</span></h2>
                 </div>
                 <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">
+                    <span >
                         close
                     </span>
                 </div>
@@ -42,22 +44,22 @@
                                 
 
                <a {% if request.path == home %}class="active"{% endif %} href="{% url 'teacher_dashb' page='home' %}">
-                  <span class="material-icons-sharp">
-                     dashboard
+                  <span >
+                    <i class='bx bxs-dashboard' ></i>
                   </span>
                   <h3>ড্যাশবোর্ড</h3>
               </a> 
         
                <a {% if request.path == add_mark %}class="active"{% endif %} href="{% url 'teacher_dashb' page='add_mark' %}">
-                   <span class="material-icons-sharp">
-                     inventory
+                   <span >
+                    <i class='bx bx-add-to-queue'></i>
                    </span>
                    <h3>মার্কস প্রদান</h3>
                </a>
     
                <a {% if request.path == your_student %}class="active"{% endif %} href="{% url "teacher_dashb" page='your_student' %}">
-                    <span class="material-icons-sharp">
-                        person_outline
+                    <span >
+                        <i class='bx bxs-user-detail'></i>
                     </span>
                     <h3>শিক্ষার্থীরা</h3>
 
@@ -65,40 +67,45 @@
 
            
                <a {% if request.path == msg %}class="active"{% endif %} href="{% url 'teacher_dashb' page='msg' %}">
-                   <span class="material-icons-sharp">
-                       mail_outline
+                   <span >
+                    {% if unviewed_msg == 0 %}
+                    <i class='bx bxs-envelope' ></i>
+                    {% else %}
+                    <i class='bx bxs-envelope bx-tada' ></i>
+
+                    {% endif %}
                    </span>
                    <h3>বার্তা</h3>
                    <span class="message-count">{{unviewed_msg}}</span>
                </a>
                
                <a {% if request.path == apply_leave %}class="active"{% endif %} href="{% url 'teacher_dashb' page='apply_leave' %}">
-                   <span class="material-icons-sharp">
-                     receipt_long
+                   <span >
+                    <i class='bx bx-receipt'></i>
                    </span>
                    <h3>ছুটির আবেদন</h3>
                </a>
                <a {% if request.path == all_setting %}class="active"{% endif %} href="{% url 'teacher_dashb' page='all_setting' %}">
-                   <span class="material-icons-sharp">
-                       settings
+                   <span >
+                       <i class='bx bx-cog bx-spin'  ></i>
                    </span>
                    <h3>সেটিংস্</h3>
                </a>
                <a {% if request.path == wallet %}class="active"{% endif %} href="{% url 'teacher_dashb' page='wallet' %}">
-                <span class="material-icons-sharp">
-                    account_balance_wallet
+                <span >
+                    <i class='bx bxs-wallet'  ></i>
                 </span>
                    <h3>ওয়ালেট</h3>
                </a>
                <a {% if request.path == hw %}class="active"{% endif %} href="{% url 'teacher_dashb' page='hw' %}">
-                   <span class="material-icons-sharp">
-                       add
+                   <span >
+                    <i class='bx bx-message-square-add'></i>
                    </span>
                    <h3>বাড়ির কাজ দিন</h3>
                </a>
                <a href="{% url "logout" %}">
-                   <span class="material-icons-sharp">
-                       logout
+                   <span >
+                    <i class='bx bx-log-out-circle bx-fade-left'  ></i>
                    </span>
                    <h3>লগ আউট</h3>
                </a>
@@ -117,16 +124,16 @@
         <div class="right-section">
             <div class="nav">
                 <button id="menu-btn">
-                    <span class="material-icons-sharp">
-                        menu
+                    <span >
+                        <i class='bx bx-menu'></i>
                     </span>
                 </button>
                 <div class="dark-mode">
                     <span class="material-icons-sharp active">
-                        light_mode
+                        <i class='bx bx-bulb' style='color:yellow' ></i>
                     </span>
-                    <span class="material-icons-sharp">
-                        dark_mode
+                    <span >
+                        <i class='bx bx-moon' style='color:black' ></i>
                     </span>
                 </div>
                 

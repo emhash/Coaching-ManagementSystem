@@ -51,6 +51,21 @@
     </div>
 
     <div class="sales">
+        <a href="">
+            <div class="status">
+                <div class="info">
+                    <h3>সকল শিট+</h3>
+                    <h1>নোট</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/note.png" %}" alt="">
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="sales">
         <a href="{% url "teacher_dashb" 'hw' %}">
             <div class="status">
                 <div class="info">
@@ -98,7 +113,7 @@
             {% else %}
                 {% if usr.user.last_login %}
                 <p>
-                    <i style="font-size: 13px; color: red; vertical-align: middle; margin-right: 2px; " class="material-icons-sharp">access_time</i>
+                    <i style="font-size: 15px; color: red; vertical-align: middle; margin-right: 2px; " class='bx bx-time-five bx-spin' ></i></i>
                     <span class="time-since">{{ usr.user.last_login|timesince }} ago</span>
                 </p>
                 {% else %}
@@ -112,7 +127,7 @@
 
         <div class="user" >
             <a href="{% url "teacher_dashb" 'your_student' %}" style="display: flex; flex-direction: column; align-items: center;">
-                <i class="material-icons-sharp">add</i>
+                <i class='bx bx-plus-medical'></i>
                 <p>show more</p>
             </a>
         </div>
@@ -129,15 +144,15 @@
 <div class="reminders">
     <div class="header">
         <h2>Reminders</h2>
-        <span class="material-icons-sharp">
-            notifications_none
+        <span >
+            <i class='bx bx-bell' ></i>
         </span>
     </div>
     {% for c in data %}
     <div class="notification">
         <div class="icon">
-            <span class="material-icons-sharp">
-                volume_up
+            <span >
+                <i class='bx bxs-volume-full'></i>
             </span>
         </div>
         <div class="content">
@@ -147,75 +162,13 @@
                     {{ c.start_class }} - {{ c.end_class }}
                 </small>
             </div>
-            <span class="material-icons-sharp">
-                more_vert
+            <span >
+                <i class='bx bxs-pencil'></i>
             </span>
         </div>
     </div>
-    
-    <script>
-        // Get the start time from the Django variable and convert it to a JavaScript Date object
-        var startTime = new Date('{{ c.start_class }}');
-        
-        // Calculate the time 30 minutes before the class starts
-        var reminderTime = new Date(startTime.getTime() - 30 * 60000);
-        
-        // Calculate the time 1 hour after the class starts
-        var endTime = new Date(startTime.getTime() + 60 * 60000);
-        
-        // Get the current time
-        var currentTime = new Date();
-        
-        // Set a reminder for 30 minutes before the class starts
-        if (currentTime < reminderTime) {
-            var timeUntilReminder = reminderTime - currentTime;
-            setTimeout(function() {
-                alert('Reminder: Your class starts in 30 minutes!');
-            }, timeUntilReminder);
-        }
-        
-        // Remove the reminder 1 hour after the class starts
-        if (currentTime < endTime) {
-            var timeUntilRemoveReminder = endTime - currentTime;
-            setTimeout(function() {
-                // Remove the reminder here (e.g., by hiding a message)
-                // You can add your own logic for removing the reminder
-            }, timeUntilRemoveReminder);
-        }
-    </script>
+
 {% endfor %}
-
-
-
-    <div class="notification deactive">
-        <div class="icon">
-            <span class="material-icons-sharp">
-                edit
-            </span>
-        </div>
-        <div class="content">
-            <div class="info">
-                <h3>৫ম এর ক্লাস</h3>
-                <small class="text_muted">
-                    08:00 AM - 12:00 PM
-                </small>
-            </div>
-            <span class="material-icons-sharp">
-                more_vert
-            </span>
-        </div>
-    </div>
-
-    <div class="notification add-reminder">
-        <div>
-            <span class="material-icons-sharp">
-                add
-            </span>
-            <h3>Add Reminder</h3>
-        </div>
-    </div>
-
-</div>
 
 
 {% endblock reminder %}

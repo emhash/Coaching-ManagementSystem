@@ -407,7 +407,7 @@ def teacher_dashb(request, page=None):
             return render(request, 'teacher/add_mark.html', {'data':shift})
         
         elif page == 'msg':
-            all_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher).order_by('-upload_at', 'visited')
+            all_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher).order_by('upload_at', '-visited')
             
             context = {
                 'all_message':all_msg,
