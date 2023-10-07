@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<h1>Send a message for all your student</h1>
+<h1>আপনার জন্য সকল বার্তা </h1>
 
 <div class="recent-orders">
     
@@ -10,18 +10,45 @@
     {% for m in all_message %}
     {% if m.visited == False %}
     
-    <a href="{% url "seen_message" m.id %}" style = "color:red;" class="input-field ">
-        {{m}}
-        
-    </a>
+    <div>
+
+        <a  href="{% url "seen_message" m.id %}">
+
+            <div class="the_box_uv">
+            <span class="material-icons-sharp">
+                arrow_right
+            </span>
+            <span class="material-icons-sharp">
+                inbox
+            </span>
+                
+                {{m.headline}}
+                <span class="sign">NEW</span>
+            </div>
+        </a>
+
+    </div>
+ 
     {% else %}
-    <a href="#" style = "color:green;" class="input-field ">
-        {{m.headline}}
-        
-    </a>
+
+
+    <div>
+
+        <div class="the_box_v">
+
+            <a href="{% url "seen_message" m.id %}" style = "color:green;" class="input-field ">
+                {{m.headline}}
+            <span class="material-icons-sharp">
+                done_outline
+            </span>
+                
+            </a>
+
+        </div>
+
+    </div>
     {% endif %}
     
-    <br>
     {% endfor %}
 
 

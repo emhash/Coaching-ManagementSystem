@@ -1,13 +1,14 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <link rel="stylesheet" href="{% static 'css/d.css' %}">
     {% block css %}{% endblock css %}
     <title> Dashboard | coaching</title>
@@ -18,7 +19,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="{% url "student_dashb" 'home' %}" class="logo">
-            <i class="fas fa-user"></i>
+            <i class='bx bxs-user'></i>
             <div class="logo-name"><span> CS</span> Dash</div>
         </a>
 
@@ -31,28 +32,28 @@
             {% url 'student_dashb' page='settings' as settings %}
 
             <li class="{% if request.path == home %}active{% endif %}">
-                <a href="{% url 'student_dashb' page='home' %}"><i class="fas fa-home"></i> হোম </a>
+                <a href="{% url 'student_dashb' page='home' %}"><i class='bx bxs-home'></i> হোম </a>
             </li>
             <li class="{% if request.path == result %}active{% endif %}">
-                <a href="{% url 'student_dashb' page='result' %}"><i class="fas fa-calendar"></i>সকল রেজাল্ট</a>
+                <a href="{% url 'student_dashb' page='result' %}"><i class='bx bxs-calendar'></i>সকল রেজাল্ট</a>
             </li>
             <li class="{% if request.path == class %}active{% endif %}">
-                <a href="{% url 'student_dashb' page='class' %}"><i class="fas fa-book-open"></i>তোমার ক্লাস</a>
+                <a href="{% url 'student_dashb' page='class' %}"><i class='bx bxs-book-open'></i>তোমার ক্লাস</a>
             </li>
             <li class="{% if request.path == message %}active{% endif %}">
-                <a href="{% url 'student_dashb' page='message' %}"><i class="fas fa-bell"></i>বার্তা </a>
+                <a href="{% url 'student_dashb' page='message' %}"><i class='bx bxs-bell'></i>বার্তা </a>
             </li>
             <li class="{% if request.path == feedback %}active{% endif %}">
-                <a href="{% url 'student_dashb' page='feedback' %}"><i class="fas fa-user"></i>ফিডব্যাক দাও </a>
+                <a href="{% url 'student_dashb' page='feedback' %}"><i class='bx bxs-user'></i>ফিডব্যাক দাও </a>
             </li>
             <li class="{% if request.path == settings %}active{% endif %}">
-                <a href="{% url 'student_dashb' page='settings' %}"><i class="fas fa-cog"></i>সেটিংস</a>
+                <a href="{% url 'student_dashb' page='settings' %}"><i class='bx bx-cog ' ></i>সেটিংস</a>
             </li>
         </ul>
         <ul class="side-menu">
             <li>
                 <a href="{% url "logout" %}" class="logout">
-                    <i class="fas fa-sign-out-alt"></i>
+                    <i class='bx bx-log-out-circle bx-flashing' ></i>
                     লগআউট
                 </a>
             </li>
@@ -60,26 +61,30 @@
 
   </div>
 
-
     <!-- Main Content -->
     <div class="content">
         <!-- Navbar -->
         <nav>
-            <i class='bx bx-menu'>O</i>
+            <i class='bx bx-menu'></i>
             <form action="#">
                 <div class="form-input">
                     <input type="search" placeholder="Search...">
-                    <button class="search-btn" type="submit"><i class='fa fa-search'></i></button>
+                    <button class="search-btn" type="submit"><i class='bx bxs-search'></i></button>
                 </div>
             </form>
             <input type="checkbox" id="theme-toggle" hidden>
             <label for="theme-toggle" class="theme-toggle"></label>
-            <a href="#" class="notif">
-                <i class='fa fa-bell'></i>
-                <span class="count">12</span>
+            <a href="{% url "student_dashb" 'message' %}" class="notif">
+                {% if unviewed_msg_std == 0 %}
+                <i class='bx bxs-bell'></i>
+                {% else %}
+                <i class='bx bxs-bell bx-tada'></i>
+
+                {% endif %}
+                <span class="count">{{unviewed_msg_std}}</span>
             </a>
             {{request.user.student.s_name}}
-            <a href="#" class="profile">
+            <a href="{% url "student_dashb" 'settings' %}" class="profile">
                 <img src="{{request.user.student.profile_pic.url}}">
             </a>
         </nav>
@@ -93,15 +98,8 @@
     
     </div>
 
-
     <script src="{% static 'js/d.js' %}"></script>
     {% block js %}{% endblock js %}
 </body>
 
 </html>
-
-
-
-
-    <script src="index.js"></script>
-</body>

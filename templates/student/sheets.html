@@ -1,0 +1,80 @@
+{% extends "student/dash_base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    
+
+
+.the_box_uv {
+    background-color: #f0f0f0; 
+    padding: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.material-icons-sharp {
+    font-size: 20px; 
+    float:left;
+    margin-right: 0px;
+}
+
+
+.sign {
+    background-color: #ff5733;
+    color: #fff;
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    font-weight: bold;
+}
+
+
+.the_box_v{
+    background-color: rgba(52, 68, 71, 0.555); 
+    padding: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.viewed{
+    padding: 5px 10px; 
+}
+
+</style>
+
+
+<h1>তোমার জন্য বাড়ির কাজ </h1>
+<br>
+<div class="my_msg">
+
+    {% for m in hw %}
+  
+    <div>
+        <div class="the_box_uv">
+        
+            <span class="material-icons-sharp">
+                
+                <i class='bx bx-task bx-tada'></i>
+            </span>
+            {{m.title}}
+            <span class="sign"> <a href="">Download</a></span>
+        </div>
+    </div>
+ 
+    {% endfor %}
+
+
+
+</div>
+
+{% endblock content %}
+
+
+

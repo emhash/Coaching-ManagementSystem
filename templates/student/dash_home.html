@@ -2,31 +2,26 @@
 {% load static %}
 {% block content %}
 
-
     <div class="header">
         <div class="left">
             <h1>ড্যাশবোর্ড</h1>
             <ul class="breadcrumb">
-                <li><a href="#">
-                        বিস্তারিত
-                    </a></li>
-                
+                <li><a href="#">বিস্তারিত</a></li>
             </ul>
         </div>
         <a href="#" class="report">
-            <i class='fa fa-download'></i>
+            <i class='bx bx-download'></i> <!-- Replace 'bx bx-download' with the appropriate Boxicons class for the download icon -->
             <span>তোমার আইডি কার্ড Download করো</span>
         </a>
     </div>
 
     <div class="analyse">
-
         <div class="sales">
             <a href="{% url "student_dashb" 'mark' %}">
                 <div class="status">
                     <div class="info">
-                        <h3>Your result</h3>
-                        <h1>রেজাল্ট</h1>
+                        <h3>নির্দিষ্ট পরীক্ষার</h3>
+                        <h1>ফলাফল</h1> 
                     </div>
                     <div class="progresss">
                         <img src="{% static "image/result.png" %}" alt="">
@@ -39,8 +34,8 @@
             <a href="">
                 <div class="status">
                     <div class="info">
-                        <h3>পরীক্ষা সিডিউল</h3>
-                        <h1>পরীক্ষা </h1>
+                        <h3>সকল সিডিউল</h3>
+                        <h1>পরীক্ষা</h1>
                     </div>
                     <div class="progresss">
                         <img src="{% static "image/book.png" %}" alt="">
@@ -48,12 +43,26 @@
                 </div>
             </a>
         </div>
-    
+
+        <div class="sales">
+            <a href="{% url "student_dashb" 'sheet' %}">
+                <div class="status">
+                    <div class="info">
+                        <h3>সকল শিট+</h3>
+                        <h1>নোট</h1>
+                    </div>
+                    <div class="progresss">
+                        <img src="{% static "image/note.png" %}" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+
         <div class="sales">
             <a href="">
                 <div class="status">
                     <div class="info">
-                        <h3>কুইজ এখন</h3>
+                        <h3>এখন চলামান</h3>
                         <h1>কুইজ</h1>
                     </div>
                     <div class="progresss">
@@ -62,12 +71,12 @@
                 </div>
             </a>
         </div>
-    
+
         <div class="sales">
-            <a href="">
+            <a href="{% url "student_dashb" 'hw' %}">
                 <div class="status">
                     <div class="info">
-                        <h3>বাড়ির কাজ </h3>
+                        <h3>বাড়ির জন্য</h3>
                         <h1>কাজ</h1>
                     </div>
                     <div class="progresss">
@@ -76,9 +85,9 @@
                 </div>
             </a>
         </div>
-    
+
         <div class="sales">
-            <a href="">
+            <a href="{% url "student_dashb" 'routine' %}">
                 <div class="status">
                     <div class="info">
                         <h3>সব বিষয়</h3>
@@ -90,20 +99,13 @@
                 </div>
             </a>
         </div>
-    
-    
-    
     </div>
-
-
-
 
     <div class="bottom-data">
         <div class="orders">
             <div class="header">
-                <i class='fa fa-receipt'></i>
+                <i class='bx bx-receipt'></i> <!-- Replace 'bx bx-receipt' with the appropriate Boxicons class for the receipt icon -->
                 <h3>আজকের নোটিশ!</h3>
-                
             </div>
             <marquee behavior="scroll" direction="left">
                 <h1 style="color: #ff0033;">আজকে বাংলা ক্লাস হবে না।</h1>
@@ -125,39 +127,36 @@
             </marquee>
         </div>
 
-
         <!-- Reminders -->
         <div class="reminders">
             <div class="header">
-                <i class='fa fa-note'></i>
+                <i class='bx bx-note'></i> <!-- Replace 'bx bx-note' with the appropriate Boxicons class for the note icon -->
                 <h3>Remiders</h3>
-                
             </div>
             <ul class="task-list">
                 <li class="completed">
                     <div class="task-title">
-                        <i class='fa fa-check-circle'></i>
-                        <p>কালকের ক্লাস আজকে </p>
+                        <i class='bx bx-check-circle'></i> <!-- Replace 'bx bx-check-circle' with the appropriate Boxicons class for the check-circle icon -->
+                        <p>কালকের ক্লাস আজকে</p>
                     </div>
-                    <i class='fa fa-dots-vertical-rounded'></i>
+                    <i class='bx bx-dots-vertical-rounded'></i> <!-- Replace 'bx bx-dots-vertical-rounded' with the appropriate Boxicons class for the dots-vertical-rounded icon -->
                 </li>
                 <li class="completed">
                     <div class="task-title">
-                        <i class='fa fa-check-circle'></i>
-                        <p>গনিত বাড়ির কাজ ৫.৮.২০২৩ জমা </p>
+                        <i class='bx bx-check-circle'></i> <!-- Replace 'bx bx-check-circle' with the appropriate Boxicons class for the check-circle icon -->
+                        <p>গনিত বাড়ির কাজ ৫.৮.২০২৩ জমা</p>
                     </div>
-                    <i class='fa fa-dots-vertical-rounded'></i>
+                    <i class='bx bx-dots-vertical-rounded'></i> <!-- Replace 'bx bx-dots-vertical-rounded' with the appropriate Boxicons class for the dots-vertical-rounded icon -->
                 </li>
                 <li class="not-completed">
                     <div class="task-title">
-                        <i class='fa fa-x-circle'></i>
+                        <i class='bx bx-x-circle'></i> <!-- Replace 'bx bx-x-circle' with the appropriate Boxicons class for the x-circle icon -->
                         <p>শিক্ষা সফর 7AM 7 october.</p>
                     </div>
-                    <i class='fa fa-dots-vertical-rounded'></i>
+                    <i class='bx bx-dots-vertical-rounded'></i> <!-- Replace 'bx bx-dots-vertical-rounded' with the appropriate Boxicons class for the dots-vertical-rounded icon -->
                 </li>
             </ul>
         </div>
     </div>
-
 
 {% endblock content %}

@@ -375,6 +375,37 @@ main .recent-orders a{
     color: var(--color-primary);
 }
 
+.the_box_uv{
+    width: 100%;
+    font-size: 15px;
+    
+    padding: 0.7rem;
+    border: 1px dashed rgb(6, 5, 77);
+    color: #021e29;
+    
+}
+
+.the_box_uv .material-icons-sharp{
+    float: left;
+}
+
+.the_box_v .material-icons-sharp{
+    float: left;
+}
+
+.the_box_uv .sign {
+    float: right;
+    
+    color: red;
+    
+}
+
+.the_box_uv:hover{
+    filter: drop-shadow(0.2px 0.2px red );
+}
+
+
+
 
 
 /* Style input fields and buttons */

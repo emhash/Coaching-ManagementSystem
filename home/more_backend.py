@@ -27,15 +27,3 @@ def generate_unique_integer_id():
         if not Student.objects.filter(s_id=random_id).exists():
             return random_id
 
-
-def common_data(request):
-    try:
-        unviewed_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher, visited = False).count()
-
-    except:
-        unviewed_msg = 0
-    context = {
-        'unviewed_msg' : unviewed_msg,
-    }
-    return context 
-

@@ -150,12 +150,57 @@ def student_dashb(request, page=None):
     if request.user.role == 'student':
         if page == 'feedback':
             return render(request, 'student/dash_feedback.html')
-        elif page == 'settings':
-            return edit_profile(request)
-
-            
+        
         elif page == 'message':
-            return render(request, 'student/dash_message.html')
+            all_msg = MessageForStudent.objects.filter(message_for = request.user.student).order_by('-upload_at', 'visited')
+            
+            context = {
+                'all_message':all_msg,
+            }
+
+            return render(request, 'student/dash_message.html', context)
+        elif page == 'settings':
+
+            return edit_profile(request)
+   
+        elif page == 'hw':
+            hw = {1:"New hw added 2023"}
+            context = {'hw':hw}
+            return render(request, 'student/hw.html', context)
+        
+        elif page == 'sheet':
+            sheet = {'title':"New note of chapter 3"}
+            context = {'hw':sheet}
+            return render(request, 'student/sheets.html', context)
+        
+        elif page == 'routine':
+
+            student = request.user.student
+            routine = []
+
+            # student's batch
+            student_batch = student.batch
+
+            if student_batch:
+                # the subjects for the student's class
+                subjects_per_class = student.class_subjects
+
+                if subjects_per_class:
+                    # the subjects related to the student's class
+                    subjects = subjects_per_class.subjects.all()
+
+                    # For each subject, get the routine data
+                    for subject in subjects:
+                        # Filter MakeBatch objects based on both batch and class
+                        data = MakeBatch.objects.filter(batch=student_batch, class_name=subjects_per_class, subject=subject)
+                        # print(data)
+                        if data:
+                            routine.append(data)
+                    # print(routine)
+
+            context = {'routine': routine}
+            return render(request, 'student/routine.html', context)
+
         elif page == 'class':
 
             student = request.user.student
@@ -176,20 +221,20 @@ def student_dashb(request, page=None):
                     for subject in subjects:
                         # Filter MakeBatch objects based on both batch and class
                         data = MakeBatch.objects.filter(batch=student_batch, class_name=subjects_per_class, subject=subject)
-                        print(data)
+                        # print(data)
                         if data:
                             routine.append(data)
+                    # print(routine)
 
             context = {'routine': routine}
             return render(request, 'student/dash_class.html', context)
 
-
-
         elif page == 'change_password':
             return change_password(request)
+        
         elif page == 'mark':
             exam_id = request.GET.get('exam_id')  
-            print(exam_id)
+            # print(exam_id)
             exam = CreateExam.objects.all()
             # marks = MarksOfStudent.objects.filter(exam_type=exam_id)
             marks =[]
@@ -202,9 +247,6 @@ def student_dashb(request, page=None):
 
             return render(request, 'student/res.html', {'exam': exam, 'marks': marks})
 
-
-
-
         elif page == 'result':
             # print(request.user.student)
             mark = MarksOfStudent.objects.filter(student_id = request.user.student.s_id)
@@ -212,12 +254,14 @@ def student_dashb(request, page=None):
             #     print(m.mark)
             
             return render(request, 'student/dash_result.html', context={'marks':mark})
+        
         else:
             # Handle invalid page name or other default behavior
             return render(request, 'student/dash_home.html')
     else:
         return render(request, 'main/404.html')
     
+
 
 # ----------------------------------- DONE (working on add marks) ------------------------------------------------
 
@@ -363,7 +407,7 @@ def teacher_dashb(request, page=None):
             return render(request, 'teacher/add_mark.html', {'data':shift})
         
         elif page == 'msg':
-            all_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher).order_by('upload_at')
+            all_msg = MessageForTeacher.objects.filter(message_for = request.user.teacher).order_by('-upload_at', 'visited')
             
             context = {
                 'all_message':all_msg,
@@ -545,9 +589,14 @@ def edit_profile(request):
 def seen_message(request, msg_id):
 
     if request.user.role == "student":
-        # content = get_object_or_404(MessageForStudent, id=msg_id)
-        # context = {'sms':content}
-        pass
+        if msg_id is not None:
+            content = get_object_or_404(MessageForStudent, id=msg_id)
+            content.visited = True
+            content.save()
+            context = {'sms':content}
+            return render(request, 'main/m1.html', context)
+        else:
+            return render(request, 'main/404.html')
 
     elif request.user.role == "teacher":
         if msg_id is not None:
@@ -561,6 +610,7 @@ def seen_message(request, msg_id):
         else:
             content = "NOTHING. Its a spam"
             context = {'sms':content}
+
 
     else:
         return render(request, 'main/404.html')

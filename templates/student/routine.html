@@ -5,25 +5,31 @@
     <div class="orders">
         <div class="header">
             <i class='bx bx-receipt'></i>
-            <h3>All Published Result</h3>
+            <h3>তোমার ক্লাস রুটিন</h3>
             <i class='bx bx-filter'></i>
             <i class='bx bx-search'></i>
         </div>
         <table>
             <thead>
                 <tr>
-                    <th>তোমার ক্লাস</th>
+                    <th>তোমার ব্যাচ </th>
                     <th>বিষয়</th>
                     <th>শিক্ষক</th>
+                    <th>ক্লাস শুরু</th>
+                    <th>ক্লাস শেষ</th>
+                    <th>শিফট</th>
                 </tr>
             </thead>
             <tbody>
                 {% for queryset in routine %}
                     {% for d in queryset %}
                         <tr>
-                            <td>{{ d.class_name }}</td>
+                            <td>{{ d.batch.batch_name }}</td>
                             <td>{{ d.subject }}</td>
                             <td>{{ d.teacher }}</td>
+                            <td>{{ d.start_class }}</td>
+                            <td>{{ d.end_class }}</td>
+                            <td>{{ d.batch.shift }}</td>
                         </tr>
                     {% endfor %}
                 {% endfor %}

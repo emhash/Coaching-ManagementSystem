@@ -54,7 +54,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'home.more_backend.common_data',
+                'home.public.common_data',
             ],
         },
     },
