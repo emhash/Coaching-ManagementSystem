@@ -331,7 +331,7 @@ main .new-users .user-list .user img{
     margin-bottom: 0.4rem;
     border-radius: 50%;
 }
-
+/* 
 main .recent-orders{
     margin-top: 1.3rem;
 }
@@ -355,14 +355,6 @@ main .recent-orders table:hover{
     box-shadow: none;
 }
 
-main table tbody td{
-    height: 2.8rem;
-    border-left: 1px solid #19243a;
-    
-    border-top: 1px solid #19243a;
-    
-    color: var(--color-dark-variant);
-}
 
 main table tbody tr{
     border-top: none;
@@ -374,12 +366,23 @@ main .recent-orders a{
     margin: 1rem auto;
     color: var(--color-primary);
 }
+ */
+
+
+ main table tbody td{
+    border-right: 1px solid #19243a;
+    border-bottom: 1px solid #19243a;
+    border-left: 1px solid #19243a;
+    
+    color: var(--color-dark-variant);
+}
+
+
+ 
 
 
 
 
-
-/* Style input fields and buttons */
 .input-field {
     width: 100%;
     padding: 0.7rem;
@@ -755,4 +758,106 @@ main .recent-orders a{
         font-size: 2rem;
     }
 
+}
+
+
+
+
+
+
+
+
+
+.bottom-data{
+    
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 24px;
+    margin-top: 24px;
+    width: 100%;
+    color: #181a1e;
+}
+
+.bottom-data>div{
+    border-radius: 20px;
+    background: #f0faff;
+    padding: 24px;
+    overflow-x: auto;
+}
+
+.bottom-data .header{
+    display: flex;
+    align-items: center;
+    grid-gap: 16px;
+    margin-bottom: 24px;
+}
+
+.bottom-data .header h3{
+    margin-right: auto;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.bottom-data .header .bx{
+    cursor: pointer;
+}
+
+.bottom-data .orders{
+    flex-grow: 1;
+    flex-basis: 500px;
+}
+
+.bottom-data .orders table{
+    margin: 0 auto;
+    vertical-align: middle;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bottom-data .orders table th{
+    vertical-align: middle;
+    padding-bottom: 12px;
+    font-size: 13px;
+    text-align: center;
+    border-bottom: 1px solid #FF0060;
+}
+
+.bottom-data .orders table td{
+    text-align: center; /* Center horizontally */
+    vertical-align: middle;
+    padding: 16px 0;
+    font-size: medium;
+}
+
+.bottom-data .orders table tr td:first-child{
+    
+    align-items: center;
+    grid-gap: 12px;
+    padding-left: 6px;
+}
+
+.bottom-data .orders table td img{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.bottom-data .orders table tbody tr{
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bottom-data .orders table tbody tr:hover{
+    background: #569397;
+}
+
+.bottom-data .orders table tr td input {
+    width: 100%;
+    border: none;
+    padding: 4px;
+    font-size: medium;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
 }

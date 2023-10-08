@@ -300,6 +300,7 @@ class MessageForStudent(models.Model):
 
 class NoteAndSheet(models.Model):
     title = models.CharField( max_length= 150)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True)
     for_class = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)

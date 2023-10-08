@@ -3,13 +3,20 @@
 {% block content %}
 
 
-<div class="recent-orders ">
+<div class="bottom-data">
+  <div class="orders">
+      <div class="header">
+          <i class='bx bx-receipt'></i>
+          <h3>আপনি যেসব বিষয় পড়ান</h3>
+          <i class='bx bx-filter'></i>
+          <i class='bx bx-search'></i>
+      </div> 
   {% for m in messages %}
   <div class="message-box">
       {{ m }}
       <span class="close-button" onclick="this.parentElement.style.display='none'">close</span>
   </div>
-{% endfor %}
+  {% endfor %}
 
 
   <h1>Edit Your Profile</h1>
@@ -28,13 +35,17 @@
     <button type="submit" class="edit-button">Save Changes</button>
     
   </form>
-
+  <br>
   {% comment %} <img src="{{ request.user.teacher.profile_pic.url }}" alt="profile"> {% endcomment %}
-  <a style="color: red;" href="{% url 'change_password' %}">
-    <i class='bx bx-lock-open-alt'></i> RESET PASSWORD
-  </a>
+  <div style="padding: 0px auto;">
+    
+    <a style="color: red;" href="{% url 'change_password' %}">
+      <i class='bx bx-lock-open-alt'></i> RESET PASSWORD
+    </a>
+  </div>
   
 
 
+</div>
 </div>
 {% endblock content %}

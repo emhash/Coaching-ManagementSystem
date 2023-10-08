@@ -464,16 +464,20 @@ def teacher_dashb(request, page=None):
         elif page == 'note':
             current_teacher = request.user.teacher  
             make_batch_objects = MakeBatch.objects.filter(teacher=current_teacher)
-
+            notes = NoteAndSheet.objects.filter(teacher = current_teacher)
+            
             if request.method == 'POST':
                 form = NoteAndSheetForm(request.POST, request.FILES)
-                
-                if form.is_valid():
-                    form.save()
-                    messages.success(request, f"আপনি সফল ভাবে ক্লাস {form.cleaned_data['for_class']} এর ব্যাচ {form.cleaned_data['batch']} এ বাড়ির কাজ প্রদান করেছেন। ")
-                    return redirect('teacher_dashb', page='note')
-                else:
-                    print(form.errors)
+                try:
+                    if form.is_valid():
+                        form.instance.teacher = request.user.teacher
+                        form.save()
+
+                        messages.success(request, f"আপনি সফল ভাবে ক্লাস {form.cleaned_data['for_class']} এর ব্যাচ {form.cleaned_data['batch']} এ বাড়ির কাজ প্রদান করেছেন। ")
+                        return redirect('teacher_dashb', page='note')
+                except:
+                    
+                    return render(request, 'teacher/error.html', {'error_message': form.errors})
             else:
                 form = NoteAndSheetForm()
                 # Customize the choices for batch, class, and subject fields based on the filtered MakeBatch objects
@@ -482,16 +486,10 @@ def teacher_dashb(request, page=None):
                 form.fields['subject'].choices = [('', 'Select Subject')] + [(obj.subject.id, obj.subject.name) for obj in make_batch_objects]
 
             context = {
-                'subs': make_batch_objects,
+                'subs': notes,
                 'form' : form
             }
             return render(request, 'teacher/note.html', context)
-
-
-
-
-
-
 
 
         else:
@@ -655,6 +653,17 @@ def seen_message(request, msg_id):
 
 
 
+def delete_note(request, note_id):
+    note = get_object_or_404(NoteAndSheet, pk=note_id, teacher = request.user.teacher)
+
+    # Check if the logged-in teacher owns the note
+    if request.user.teacher == note.teacher:
+        note.delete()
+        messages.success(request, "বিষয়টি সফলভাবে মুছে ফেলা হয়েছে।")
+    else:
+        messages.error(request, "আপনি এই নোট মুছতে অনুমতি পাচ্ছেন না।")
+
+    return redirect('teacher_dashb', page='note')
 
 
 

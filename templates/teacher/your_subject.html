@@ -1,8 +1,15 @@
 {% extends 'teacher/base.html' %}
 {% load static %}
 {% block content %}
-<h1>Subject you teach</h1>
-<div class="recent-orders">
+
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>আপনি যেসব বিষয় পড়ান</h3>
+            <i class='bx bx-filter'></i>
+            <i class='bx bx-search'></i>
+        </div> 
     <table>
         <thead>
             <tr>
@@ -45,6 +52,7 @@
             {% endif %}
         </tbody>
     </table>
+</div>
 </div>
 
 

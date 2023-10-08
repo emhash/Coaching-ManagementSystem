@@ -115,38 +115,6 @@ body{
     transform: scale(1);
 }
 
-/* Style for the submit button */
-.imp_btn {
-    margin-top: 10px;
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #700142;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* Hover effect */
-.imp_btn:hover {
-    background-color: #45a049;
-}
-
-/* Focus style */
-.imp_btn:focus {
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
-
-/* Active (pressed) state */
-.imp_btn:active {
-    background-color: #3e8e41;
-}
-
-
 
 
 

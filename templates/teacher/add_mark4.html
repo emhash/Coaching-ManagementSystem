@@ -14,7 +14,15 @@
 <hr>
 
 <h3 style = "color:red;">WARNING : কোনো শিক্ষার্থীর মার্ক দেওয়ার পর তা মুছে সেভ দিবেন না । যদি ওই শিক্ষার্থীর ওই বিষয়ের মার্ক মুছে দিতে চান তবে তা ০ (শুন্য) লিখে সেভ করুন।</h3>
-<div class="recent-orders">
+
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>শিডিউল রুটিন</h3>
+            <i class='bx bx-filter'></i>
+            <i class='bx bx-search'></i>
+        </div> 
     <table>
         <thead>
             <tr>
@@ -23,7 +31,7 @@
                 <th>Guardian Number</th>
                 <th>Marks</th>
                 <th>Grade</th>
-                <th></th>
+                <th>Store</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +50,7 @@
                         {% for key, value in mark_dict.items %}
 
                         {% if key == s.s_id %}
-                        <input class="input-field" type="number" name="marks" value="{{ value.0 }}" placeholder="None">
+                        <input type="number" name="marks" value="{{ value.0 }}" placeholder="None">
                     </td>
                     <td>{{ value.1 }}</td>
 
@@ -62,6 +70,7 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 </div>
 
 {% endblock content %}

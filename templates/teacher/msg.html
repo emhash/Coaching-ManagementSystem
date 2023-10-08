@@ -50,10 +50,15 @@
     </style>
     
 
-<h1>আপনার জন্য সকল বার্তা </h1>
 
-<div class="recent-orders">
-    
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-box'></i>
+            <h3>আপনার জন্য সকল বার্তা</h3>
+            
+            <i class='bx bx-search'></i>
+        </div> 
 
     {% for m in all_message %}
     {% if m.visited == False %}
@@ -101,6 +106,7 @@
 
 
 
+</div>
 </div>
 
 

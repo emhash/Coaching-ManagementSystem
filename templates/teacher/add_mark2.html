@@ -11,11 +11,11 @@
 
     {% for s in data %}
     <div class="sales">
-        {{shift}}
         <a href="{% url "add_mark3" shift c_id s.subject %}">
             <div class="status">
                 <div class="info">
-                    <h3>Your subject</h3>
+                    {{shift}} শিফটে
+                    
                     <h1>{{s.subject }}</h1>
                 </div>
                 <div class="progresss">
