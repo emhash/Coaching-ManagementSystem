@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent
+from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -64,3 +64,5 @@ admin.site.register(MarksOfStudent, MarksOfStudentAdmin)
 admin.site.register(CreateExam)
 admin.site.register(MessageForTeacher)
 admin.site.register(MessageForStudent)
+admin.site.register(HomeWork)
+admin.site.register(NoteAndSheet)

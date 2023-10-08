@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect,get_object_or_404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, logout, login
-from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm
+from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm
 # from users.models import Student, Teacher, Guardian,Subjects,ClassWithSubject
 from users.models import *
 from .more_backend import *
@@ -459,7 +459,41 @@ def teacher_dashb(request, page=None):
         elif page == 'your_subject':
             sub = MakeBatch.objects.filter(teacher = request.user.teacher)
             return render(request, 'teacher/your_subject.html', {'subs':sub})
-        
+
+
+        elif page == 'note':
+            current_teacher = request.user.teacher  
+            make_batch_objects = MakeBatch.objects.filter(teacher=current_teacher)
+
+            if request.method == 'POST':
+                form = NoteAndSheetForm(request.POST, request.FILES)
+                
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, f"আপনি সফল ভাবে ক্লাস {form.cleaned_data['for_class']} এর ব্যাচ {form.cleaned_data['batch']} এ বাড়ির কাজ প্রদান করেছেন। ")
+                    return redirect('teacher_dashb', page='note')
+                else:
+                    print(form.errors)
+            else:
+                form = NoteAndSheetForm()
+                # Customize the choices for batch, class, and subject fields based on the filtered MakeBatch objects
+                form.fields['batch'].choices = [('', 'Select Batch')] + [(obj.batch.id, obj.batch.batch_name) for obj in make_batch_objects]
+                form.fields['for_class'].choices = [('', 'Select Class')] + [(obj.class_name.id, obj.class_name.s_class) for obj in make_batch_objects]
+                form.fields['subject'].choices = [('', 'Select Subject')] + [(obj.subject.id, obj.subject.name) for obj in make_batch_objects]
+
+            context = {
+                'subs': make_batch_objects,
+                'form' : form
+            }
+            return render(request, 'teacher/note.html', context)
+
+
+
+
+
+
+
+
         else:
             
             # ----------- Getting the new registered student of coaching ---------

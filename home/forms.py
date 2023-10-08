@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from users.models import CustomUser, Student, Teacher
+from users.models import CustomUser, Student, Teacher, HomeWork, MakeBatch
 from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
 class CommonRegistrationForm(UserCreationForm):
@@ -194,6 +194,33 @@ class StudentEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(StudentEditForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'input-field'
+
+  
+
+class HomeWorkForm(forms.ModelForm):
+    class Meta:
+        model = HomeWork
+        fields = ['title', 'hw_detail', 'last_day_of_submit', 'for_class', 'batch', 'subject']
+
+    def __init__(self, *args, **kwargs):
+        super(HomeWorkForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'input-field'
+
+  
+from users.models import NoteAndSheet
+
+class NoteAndSheetForm(forms.ModelForm):
+    class Meta:
+        model = NoteAndSheet
+        fields = ['title', 'for_class', 'batch', 'subject', 'upload_note']
+
+    def __init__(self, *args, **kwargs):
+        super(NoteAndSheetForm, self).__init__(*args, **kwargs)
 
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'input-field'

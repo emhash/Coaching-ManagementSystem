@@ -62,26 +62,26 @@ class Teacher(models.Model):
 
 
 class_for_student = [
-    ('one', 'one'),
-    ('two', 'two'),
-    ('three', 'three'),
-    ('four', 'four'),
-    ('five', 'five'),
-    ('six', 'six'),
-    ('seven', 'seven'),
-    ('eight', 'eight'),
-    ('nine_science', 'nine_science'),
-    ('nine_commerce', 'nine_commerce'),
-    ('nine_arts', 'nine_arts'),
-    ('ten_science', 'ten_science'),
-    ('ten_commerce', 'ten_commerce'),
-    ('ten_arts', 'ten_arts'),
-    ('inter_first_year_science', 'inter_first_year_science'),
-    ('inter_first_year_commerce', 'inter_first_year_commerce'),
-    ('inter_first_year_arts', 'inter_first_year_arts'),
-    ('inter_second_year_science', 'inter_second_year_science'),
-    ('inter_second_year_commerce', 'inter_second_year_commerce'),
-    ('inter_second_year_arts', 'inter_second_year_arts'),
+    ('প্রথম', 'প্রথম'),
+    ('দ্বিতীয়', 'দ্বিতীয়'),
+    ('তৃতীয়', 'তৃতীয়'),
+    ('চতুর্থ', 'চতুর্থ'),
+    ('পঞ্চম', 'পঞ্চম'),
+    ('ষষ্ঠ', 'ষষ্ঠ'),
+    ('সপ্তম', 'সপ্তম'),
+    ('অস্টম', 'অস্টম'),
+    ('নবম(বিজ্ঞান)', 'নবম(বিজ্ঞান)'),
+    ('নবম(ব্যাবসায় শিক্ষা)', 'নবম(ব্যাবসায় শিক্ষা)'),
+    ('নবম(মানবিক)', 'নবম(মানবিক)'),
+    ('দশম(বিজ্ঞান)', 'দশম(বিজ্ঞান)'),
+    ('দশম(ব্যাবসায় শিক্ষা)', 'দশম(ব্যাবসায় শিক্ষা)'),
+    ('দশম(মানবিক)', 'দশম(মানবিক)'),
+    ('একাদশ (বিজ্ঞান)', 'একাদশ (বিজ্ঞান)'),
+    ('একাদশ (ব্যাবসায় শিক্ষা)', 'একাদশ (ব্যাবসায় শিক্ষা)'),
+    ('একাদশ (মানবিক)', 'একাদশ (মানবিক)'),
+    ('দাদশ (বিজ্ঞান)', 'দাদশ (বিজ্ঞান)'),
+    ('দাদশ (ব্যাবসায় শিক্ষা)', 'দাদশ (ব্যাবসায় শিক্ষা) '),
+    ('দাদশ (মানবিক)', 'দাদশ (মানবিক)'),
     
 ]
 
@@ -117,7 +117,7 @@ class Batch(models.Model):
     total_available_seats = models.IntegerField(default=35, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.batch_name} - Available Seats - {self.total_available_seats}"
+        return f"{self.batch_name} - খালি আসন- {self.total_available_seats}"
 
 
 
@@ -296,6 +296,30 @@ class MessageForStudent(models.Model):
     def __str__(self) -> str:
         return self.headline
  
+
+
+class NoteAndSheet(models.Model):
+    title = models.CharField( max_length= 150)
+    for_class = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
+    upload_note = models.FileField(upload_to="notes", default='coaching.pdf',null=True,blank=True)
+
+class HomeWork(models.Model):
+    title = models.CharField( max_length= 150)
+    hw_detail = RichTextField()
+    last_day_of_submit = models.DateField( auto_now=False, auto_now_add=False)
+    for_class = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "HomeWork"
+        verbose_name_plural = "HomeWorks"
+
+    def __str__(self):
+        return self.title
+
 
 
 # Try to collect fee accourding to student's ability per month.
