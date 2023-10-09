@@ -27,6 +27,7 @@ urlpatterns = [
     path('teacher_dashboard/add_mark/<str:shift>/<str:cls>/<str:subject>/<str:exam>/', add_mark4, name='add_mark4'),
     path('teacher_dashboard/msg/<int:msg_id>/', seen_message, name='seen_message'),
     path('delete_note/<int:note_id>/', delete_note, name='delete_note'),
+    path('delete_hw/<int:note_id>/', delete_hw, name='delete_hw'),
 
 
 

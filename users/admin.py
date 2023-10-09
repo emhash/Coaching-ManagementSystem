@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet
+from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet,QuizCategory,Question,Answer
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -30,14 +30,7 @@ class ClassWithSubjects(admin.ModelAdmin):
     # list_display = ('id',)
 
 admin.site.register(ClassWithSubject, ClassWithSubjects)
-
-
-
   
-# @admin.register(CreateShift)
-# class CreateShiftAdmin(admin.ModelAdmin):
-#     list_display = ('id','shift_name_of_class','the_class','teacher')
-    
 admin.site.register(Subjects)
 
 admin.site.register(Shift)
@@ -66,3 +59,10 @@ admin.site.register(MessageForTeacher)
 admin.site.register(MessageForStudent)
 admin.site.register(HomeWork)
 admin.site.register(NoteAndSheet)
+
+class ExcludeUidAdmin(admin.ModelAdmin):
+    exclude = ('uid',)
+
+admin.site.register(QuizCategory, ExcludeUidAdmin)
+admin.site.register(Question,ExcludeUidAdmin)
+admin.site.register(Answer,ExcludeUidAdmin)

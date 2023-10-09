@@ -6,7 +6,7 @@ from multiselectfield import MultiSelectField
 from ckeditor.fields import RichTextField
 from django.core.exceptions import ValidationError
 from datetime import datetime, timedelta
-
+import uuid
 
 
 class CustomUser(AbstractUser):
@@ -27,7 +27,10 @@ class CustomUser(AbstractUser):
     objects = CustomManager()
 
 
+    class Meta:
+        verbose_name_plural = "ইউজার অ্যাকাউন্ট *VIP* "
 
+ 
 background_of_teacher = [
         ('science', 'science'),
         ('commerce', 'commerce'),
@@ -58,7 +61,7 @@ class Teacher(models.Model):
         return f"{self.t_name} Teacher"
     
     class Meta:
-        verbose_name_plural = "ALL TEACHERS"
+        verbose_name_plural = "ইউজার( শিক্ষক-শিক্ষিকা )"
 
 
 class_for_student = [
@@ -91,6 +94,11 @@ class Subjects(models.Model):
     def __str__(self):
         return self.name
     
+
+    class Meta:
+        verbose_name_plural = "বিষয় যুক্ত করুন"
+
+
 class ClassWithSubject(models.Model):
     s_class = models.CharField(max_length=50, choices=class_for_student, null=True, blank=True)
     subjects = models.ManyToManyField(Subjects)
@@ -99,14 +107,20 @@ class ClassWithSubject(models.Model):
         return self.s_class
     
 
+    class Meta:
+        verbose_name_plural = "শ্রেণী হিসেবে বিষয় নির্বাচন"
+
 
 class Shift(models.Model):
-
     shift_name = models.CharField( max_length=50)
 
-    
     def __str__(self):
         return f"{self.shift_name}"
+
+
+    class Meta:
+        verbose_name_plural = "শিফট তৈরি"
+
 
 class Batch(models.Model):
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
@@ -119,6 +133,9 @@ class Batch(models.Model):
     def __str__(self):
         return f"{self.batch_name} - খালি আসন- {self.total_available_seats}"
 
+
+    class Meta:
+        verbose_name_plural = "ব্যাচ তৈরি"
 
 
 
@@ -160,8 +177,10 @@ class MakeBatch(models.Model):
     def __str__(self):
         return f"BATCH : {self.batch} - {self.class_name} - {self.subject} - {self.teacher}"
     
-    
- 
+
+    class Meta:
+        verbose_name_plural = "ব্যাচ ও বিষয় ভিত্তিক শিক্ষক"
+
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
 
@@ -226,7 +245,7 @@ class Student(models.Model):
         
 
     class Meta:
-        verbose_name_plural = "ALL STUDENTS"
+        verbose_name_plural = "ইউজার ( শিক্ষার্থী )"
 
 class Guardian(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -246,8 +265,9 @@ class Guardian(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     class Meta:
-        verbose_name_plural = "ALL GUARDIANS"
+        verbose_name_plural = "ইউজার ( অভিভাবক )"
 
  
 class CreateExam(models.Model):
@@ -256,6 +276,11 @@ class CreateExam(models.Model):
 
     def __str__(self):
         return self.exam_name
+
+    class Meta:
+        verbose_name_plural = "পরীক্ষা তৈরি করুন"
+
+
 
 class MarksOfStudent(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
@@ -268,6 +293,9 @@ class MarksOfStudent(models.Model):
     def __str__(self):
         return f"{self.std} - {self.subject}"
 
+
+    class Meta:
+        verbose_name_plural = "শিক্ষার্থীদের মার্কস"
 
 
 
@@ -282,7 +310,10 @@ class MessageForTeacher(models.Model):
 
     def __str__(self) -> str:
         return self.headline
- 
+
+    class Meta:
+        verbose_name_plural = "শিক্ষকদের বার্তা পাঠান"
+
 
 class MessageForStudent(models.Model):
 
@@ -296,6 +327,8 @@ class MessageForStudent(models.Model):
     def __str__(self) -> str:
         return self.headline
  
+    class Meta:
+        verbose_name_plural = "শিক্ষার্থীদের বার্তা পাঠান"
 
 
 class NoteAndSheet(models.Model):
@@ -306,8 +339,14 @@ class NoteAndSheet(models.Model):
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
     upload_note = models.FileField(upload_to="notes", default='coaching.pdf',null=True,blank=True)
 
+    class Meta:
+        verbose_name_plural = "শিক্ষকদের দেওয়া নোট"
+
+
+
 class HomeWork(models.Model):
     title = models.CharField( max_length= 150)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True)
     hw_detail = RichTextField()
     last_day_of_submit = models.DateField( auto_now=False, auto_now_add=False)
     for_class = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE)
@@ -315,23 +354,52 @@ class HomeWork(models.Model):
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = "HomeWork"
-        verbose_name_plural = "HomeWorks"
+        verbose_name_plural = "শিক্ষকদের দেওয়া বাড়িরকাজ"
 
     def __str__(self):
         return self.title
 
+# base model , that data are common for others model also. 
+class CommonBaseModel(models.Model):
+    uid = models.UUIDField(primary_key=True, default= uuid.uuid4)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+# inheriting my common base model that are common in this model also
+class QuizCategory(CommonBaseModel):
+    name = models.CharField( max_length=90)
+
+    def __str__(self) -> str:
+        return self.name
+    
+    class Meta:
+        verbose_name_plural = "কুইজ এর ধরন তৈরি"
 
 
-# Try to collect fee accourding to student's ability per month.
+class Question(CommonBaseModel):
+    category = models.ForeignKey(QuizCategory,related_name='category', on_delete=models.CASCADE)
+    ques_name = models.CharField( max_length=90)
+    mark = models.IntegerField(default=1)
 
-# class FeesForScienceStudent(models.Model):
-#     physics = models.IntegerField()
-#     chemistry = models.IntegerField()
-#     biology = models.IntegerField()
-#     higher_math = models.IntegerField()
+    def __str__(self):
+        return self.ques_name
+
+    class Meta:
+        verbose_name_plural = "কইজ প্রশ্ন তৈরি"
 
 
-# class FeePerStudent(models.Model):
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-#     grand_total_fee = models.IntegerField(null=True, blank=True)
+
+class Answer(CommonBaseModel):
+    answer = models.CharField( max_length=150)
+    qustion = models.ForeignKey(Question, related_name='question', on_delete=models.CASCADE)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.answer
+    
+    class Meta:
+        verbose_name_plural = "কইজ উত্তর তৈরি"
+

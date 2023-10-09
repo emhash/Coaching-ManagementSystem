@@ -1,10 +1,86 @@
 {% extends 'teacher/base.html' %}
 {% load static %}
 {% block content %}
+<h1>যেসব অধ্যায়ের এবং ক্লাসের নোট প্রদান করতে চান করুন</h1>
+{% for m in messages %}
+    <div class="message-box">
+        {{ m }}
+        <span class="close-button" onclick="this.parentElement.style.display='none'"><i class='bx bxs-no-entry'></i></span>
+    </div>
+{% endfor %}
 
-<h1>Assign Homework to Students</h1>
-<div class="">
-    
+
+<form action="" method = "POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.media}}
+    {{form}}
+
+    <button type="submit" id="quiz-create-button" class="edit-button">Upload Note</button>
+</form>
+
+<h1>
+যেসব বিষয়ের নোট এ পর্যন্ত দিয়েছেন 
+</h1>
+
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>আপনি যেসব বিষয় পড়ান</h3>
+            <i class='bx bx-filter'></i>
+            <i class='bx bx-search'></i>
+        </div> 
+    <table>
+        <thead>
+            <tr>
+                <th>শিফট</th>
+                <th>শ্রেণী</th>
+                <th>বিষয়</th>
+                <th>নোট</th>
+                <th>পরিবর্তন</th>
+                
+                
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% if subs %}
+            {% for s in subs %}
+            <tr>
+            <td>
+                {{s.batch.shift}}
+            </td>
+            
+            <td>
+                {{s.for_class}}
+            </td>
+            <td>
+                {{s.subject}}
+            </td>
+            <td>
+                {{s.title}}
+            </td>
+            <td>
+                <form action="{% url 'delete_hw' s.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="edit-button">DELETE</button>
+                </form>
+            </td>
+            
+        </tr>
+        {% endfor %}
+            
+            
+            {% else %}
+            <tr>
+                <td colspan="5"><h2>আপনার কোনো বিষয় এ কোনো নোট প্রদান করা হয় নি </h2></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
 </div>
+</div>
+
 
 {% endblock content %}

@@ -7,7 +7,7 @@
   <div class="orders">
       <div class="header">
           <i class='bx bx-receipt'></i>
-          <h3>আপনি যেসব বিষয় পড়ান</h3>
+          <h3>আপনার প্রফাইলের তথ্য পরিবর্তন করুন </h3>
           <i class='bx bx-filter'></i>
           <i class='bx bx-search'></i>
       </div> 
@@ -18,8 +18,6 @@
   </div>
   {% endfor %}
 
-
-  <h1>Edit Your Profile</h1>
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.non_field_errors }}
@@ -32,15 +30,15 @@
     {% endfor %}
 
 
-    <button type="submit" class="edit-button">Save Changes</button>
+    <button type="submit" class="edit-button">পরিবর্তন সেভ করুন</button>
     
   </form>
   <br>
   {% comment %} <img src="{{ request.user.teacher.profile_pic.url }}" alt="profile"> {% endcomment %}
-  <div style="padding: 0px auto;">
+  <div style="display:flex; justify-content:center; padding: 0px auto;">
     
-    <a style="color: red;" href="{% url 'change_password' %}">
-      <i class='bx bx-lock-open-alt'></i> RESET PASSWORD
+    <a style="color: red;font-size:18px;" href="{% url 'change_password' %}">
+      <i class='bx bx-lock-open-alt'></i> পাসওয়ার্ড পরিবর্তন করতে এখানে ক্লিক করুন
     </a>
   </div>
   

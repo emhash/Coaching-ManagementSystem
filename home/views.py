@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect,get_object_or_404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, logout, login
-from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm
+from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm,HomeWorkForm
 # from users.models import Student, Teacher, Guardian,Subjects,ClassWithSubject
 from users.models import *
 from .more_backend import *
@@ -421,7 +421,36 @@ def teacher_dashb(request, page=None):
             return redirect('edit_profile')
         
         elif page == 'hw':
-            return render(request, 'teacher/hw.html')
+
+            current_teacher = request.user.teacher  
+            make_batch_objects = MakeBatch.objects.filter(teacher=current_teacher)
+            notes = HomeWork.objects.filter(teacher = current_teacher)
+            
+            if request.method == 'POST':
+                form = HomeWorkForm(request.POST, request.FILES)
+                try:
+                    if form.is_valid():
+                        form.instance.teacher = request.user.teacher
+                        form.save()
+
+                        messages.success(request, f"আপনি সফল ভাবে ক্লাস {form.cleaned_data['for_class']} এর ব্যাচ {form.cleaned_data['batch']} এ বাড়ির কাজ প্রদান করেছেন। ")
+                        return redirect('teacher_dashb', page='hw')
+                except:
+                    
+                    return render(request, 'teacher/error.html', {'error_message': form.errors})
+            else:
+                form = HomeWorkForm()
+                # Customize the choices for batch, class, and subject fields based on the filtered MakeBatch objects
+                form.fields['batch'].choices = [('', 'Select Batch')] + [(obj.batch.id, obj.batch.batch_name) for obj in make_batch_objects]
+                form.fields['for_class'].choices = [('', 'Select Class')] + [(obj.class_name.id, obj.class_name.s_class) for obj in make_batch_objects]
+                form.fields['subject'].choices = [('', 'Select Subject')] + [(obj.subject.id, obj.subject.name) for obj in make_batch_objects]
+
+            context = {
+                'subs': notes,
+                'form' : form
+            }
+
+            return render(request, 'teacher/hw.html', context)
         
         elif page == 'quiz':
             return render(request, 'teacher/quiz.html')
@@ -664,6 +693,21 @@ def delete_note(request, note_id):
         messages.error(request, "আপনি এই নোট মুছতে অনুমতি পাচ্ছেন না।")
 
     return redirect('teacher_dashb', page='note')
+
+
+
+
+def delete_hw(request, note_id):
+    note = get_object_or_404(HomeWork, pk=note_id, teacher = request.user.teacher)
+
+    # Check if the logged-in teacher owns the note
+    if request.user.teacher == note.teacher:
+        note.delete()
+        messages.success(request, "বিষয়টি সফলভাবে মুছে ফেলা হয়েছে।")
+    else:
+        messages.error(request, "আপনি এই নোট মুছতে অনুমতি পাচ্ছেন না।")
+
+    return redirect('teacher_dashb', page='hw')
 
 
 
