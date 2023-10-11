@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from users.models import CustomUser, Student, Teacher, HomeWork, MakeBatch
+from users.models import CustomUser, Student, Teacher, HomeWork, MakeBatch, Question,Answer
 from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
 class CommonRegistrationForm(UserCreationForm):
@@ -221,6 +221,32 @@ class NoteAndSheetForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(NoteAndSheetForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'input-field'
+
+  
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['ques_name', 'mark', 'how_many_answer_for_this_ques']
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'input-field'
+
+  
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['answer', 'is_correct']
+
+    def __init__(self, *args, **kwargs):
+        super(AnswerForm, self).__init__(*args, **kwargs)
 
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'input-field'

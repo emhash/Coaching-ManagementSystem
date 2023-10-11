@@ -371,6 +371,10 @@ class CommonBaseModel(models.Model):
 # inheriting my common base model that are common in this model also
 class QuizCategory(CommonBaseModel):
     name = models.CharField( max_length=90)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE,null=True,blank=True)
+    class_name = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE,null=True,blank=True)
+    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE,null=True,blank=True)
+    duration = models.IntegerField(default=5)
 
     def __str__(self) -> str:
         return self.name
@@ -383,6 +387,7 @@ class Question(CommonBaseModel):
     category = models.ForeignKey(QuizCategory,related_name='category', on_delete=models.CASCADE)
     ques_name = models.CharField( max_length=90)
     mark = models.IntegerField(default=1)
+    how_many_answer_for_this_ques = models.IntegerField(default=4)
 
     def __str__(self):
         return self.ques_name

@@ -1,9 +1,9 @@
 from .forms import TeacherProfileForm,PassChangeForm
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect,get_object_or_404, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect,get_object_or_404, HttpResponse
 from django.contrib.auth import authenticate, logout, login
-from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm,HomeWorkForm
+from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm,HomeWorkForm,QuestionForm,AnswerForm
 # from users.models import Student, Teacher, Guardian,Subjects,ClassWithSubject
 from users.models import *
 from .more_backend import *
@@ -440,11 +440,16 @@ def teacher_dashb(request, page=None):
                     return render(request, 'teacher/error.html', {'error_message': form.errors})
             else:
                 form = HomeWorkForm()
-                # Customize the choices for batch, class, and subject fields based on the filtered MakeBatch objects
-                form.fields['batch'].choices = [('', 'Select Batch')] + [(obj.batch.id, obj.batch.batch_name) for obj in make_batch_objects]
-                form.fields['for_class'].choices = [('', 'Select Class')] + [(obj.class_name.id, obj.class_name.s_class) for obj in make_batch_objects]
-                form.fields['subject'].choices = [('', 'Select Subject')] + [(obj.subject.id, obj.subject.name) for obj in make_batch_objects]
 
+                # Get distinct batches, classes, and subjects based on MakeBatch objects
+                distinct_batches = make_batch_objects.values('batch_id', 'batch__batch_name').distinct()
+                distinct_classes = make_batch_objects.values('class_name_id', 'class_name__s_class').distinct()
+                distinct_subjects = make_batch_objects.values('subject_id', 'subject__name').distinct()
+                
+                form.fields['batch'].choices = [('', 'Select Batch')] + [(batch['batch_id'], batch['batch__batch_name']) for batch in distinct_batches]
+                form.fields['for_class'].choices = [('', 'Select Class')] + [(class_item['class_name_id'], class_item['class_name__s_class']) for class_item in distinct_classes]
+                form.fields['subject'].choices = [('', 'Select Subject')] + [(subject['subject_id'], subject['subject__name']) for subject in distinct_subjects]
+            
             context = {
                 'subs': notes,
                 'form' : form
@@ -453,7 +458,40 @@ def teacher_dashb(request, page=None):
             return render(request, 'teacher/hw.html', context)
         
         elif page == 'quiz':
-            return render(request, 'teacher/quiz.html')
+            teacher = request.user.teacher
+            # reverse example of database from subject to makebatch class's teacher filter
+            subjects = Subjects.objects.filter(makebatch__teacher=teacher)
+
+            # applying distinct() to ensure that duplicate rows are removed
+            the_class = ClassWithSubject.objects.filter(makebatch__teacher=teacher).distinct()
+
+            if request.method == 'POST':
+                the_title = request.POST.get('heading') 
+                selected_subject_id = request.POST.get('subject')
+                selected_class_id = request.POST.get('classes')
+                
+                # Create a QuizCategory instance and set its fields
+                quiz_category = QuizCategory()
+                quiz_category.name = the_title
+                quiz_category.teacher = teacher
+                quiz_category.class_name_id = selected_class_id
+                quiz_category.subject_id = selected_subject_id
+                quiz_category.duration = request.POST.get('duration')          
+                try:
+                    quiz_category.save()
+                    messages.success(request, "Congrats! Now you can create a quiz.")
+                    redirect('teacher_dashb', page='quiz')
+                except Exception as e:
+                    return render(request, 'teacher/error.html', {'error_message': e})
+
+            quizz = QuizCategory.objects.filter(teacher = teacher)
+            # print(quizz)
+            data={
+                'subject':subjects,
+                'classes':the_class,
+                'quizes':quizz,
+            }
+            return render(request, 'teacher/quiz.html', context=data)
         
         elif page == 'your_student':
 
@@ -492,7 +530,7 @@ def teacher_dashb(request, page=None):
 
         elif page == 'note':
             current_teacher = request.user.teacher  
-            make_batch_objects = MakeBatch.objects.filter(teacher=current_teacher)
+            make_batch_objects = MakeBatch.objects.filter(teacher=current_teacher).distinct()
             notes = NoteAndSheet.objects.filter(teacher = current_teacher)
             
             if request.method == 'POST':
@@ -509,11 +547,15 @@ def teacher_dashb(request, page=None):
                     return render(request, 'teacher/error.html', {'error_message': form.errors})
             else:
                 form = NoteAndSheetForm()
-                # Customize the choices for batch, class, and subject fields based on the filtered MakeBatch objects
-                form.fields['batch'].choices = [('', 'Select Batch')] + [(obj.batch.id, obj.batch.batch_name) for obj in make_batch_objects]
-                form.fields['for_class'].choices = [('', 'Select Class')] + [(obj.class_name.id, obj.class_name.s_class) for obj in make_batch_objects]
-                form.fields['subject'].choices = [('', 'Select Subject')] + [(obj.subject.id, obj.subject.name) for obj in make_batch_objects]
-
+                # Get distinct batches, classes, and subjects based on MakeBatch objects
+                distinct_batches = make_batch_objects.values('batch_id', 'batch__batch_name').distinct()
+                distinct_classes = make_batch_objects.values('class_name_id', 'class_name__s_class').distinct()
+                distinct_subjects = make_batch_objects.values('subject_id', 'subject__name').distinct()
+                
+                form.fields['batch'].choices = [('', 'Select Batch')] + [(batch['batch_id'], batch['batch__batch_name']) for batch in distinct_batches]
+                form.fields['for_class'].choices = [('', 'Select Class')] + [(class_item['class_name_id'], class_item['class_name__s_class']) for class_item in distinct_classes]
+                form.fields['subject'].choices = [('', 'Select Subject')] + [(subject['subject_id'], subject['subject__name']) for subject in distinct_subjects]
+         
             context = {
                 'subs': notes,
                 'form' : form
@@ -709,8 +751,53 @@ def delete_hw(request, note_id):
 
     return redirect('teacher_dashb', page='hw')
 
+def question_and_answer_make_by_teacher(request, q_id):
+    teacher = request.user.teacher
+    the_category = get_object_or_404(QuizCategory, uid = q_id, teacher = teacher)
+
+    try:
+        question = get_object_or_404(Question, category_id=q_id, category__teacher=teacher)
+        num_answers = question.how_many_answer_for_this_ques
+    except :
+        num_answers = 4
+
+    if request.method == 'POST':
+        question_text = request.POST.get('question')
+        mark_ques = request.POST.get('mark_ques')
+        no_option = request.POST.get('no_option')
+
+        question = Question.objects.create(category = the_category,
+                                            ques_name=question_text,
+                                            mark=mark_ques,
+                                            how_many_answer_for_this_ques = mark_ques,
+                                            )
+
+        for i in range(int(no_option)):
+            answer_text = request.POST.get(f'answer_{i}')
+            is_correct = request.POST.get('correct_answer') == str(i)
+            # print(answer_text, is_correct )
+            
+            answer = Answer.objects.create(answer=answer_text,
+                                            qustion=question,
+                                              is_correct=is_correct)
+        messages.success(request, "Its Hign Chance your question and answer has created!")
+        return redirect('teacher_dashb', page='quiz')
+
+    else:
+        question_form = QuestionForm()
+        
+    all_existing_questions = Question.objects.filter(category=the_category)
+
+    context = {
+        'question_form': question_form,
+        'loop': num_answers,
+        'my_question':all_existing_questions,
+    }
+    return render(request, 'teacher/question.html', context)
 
 
+
+# ===================================================================================
 
 # NOT DEVELOPED YET .
 def guardian_dashb(request, page):

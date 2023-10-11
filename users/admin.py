@@ -63,6 +63,12 @@ admin.site.register(NoteAndSheet)
 class ExcludeUidAdmin(admin.ModelAdmin):
     exclude = ('uid',)
 
+class AnswerAdmin(admin.StackedInline):
+    model = Answer
+
+class QuestionAdmin(admin.ModelAdmin):
+    inlines = [AnswerAdmin]
+
 admin.site.register(QuizCategory, ExcludeUidAdmin)
-admin.site.register(Question,ExcludeUidAdmin)
+admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer,ExcludeUidAdmin)

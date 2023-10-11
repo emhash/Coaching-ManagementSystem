@@ -1,42 +1,71 @@
 {% extends 'teacher/base.html' %}
 {% load static %}
 {% block content %}
+{% for m in messages %}
+    <div class="message-box">
+        {{ m }}
+        <span class="close-button" onclick="this.parentElement.style.display='none'"><i class='bx bxs-no-entry'></i></span>
+    </div>
+{% endfor %}
 
 <h1>Create a Quiz</h1>
-<form id="quiz-creation-form">
-    <div class="form-group">
-        <label for="quiz-title">Quiz Title:</label>
-        <input type="text" id="quiz-title" name="quiz-title" class="input-field" required>
-    </div>
 
-    <div class="form-group">
-        <label for="question">Question:</label>
-        <input type="text" id="question" name="question" class="input-field" required>
-    </div>
+<form method="POST">
+    {% csrf_token %}
+    <h3>আপনি যে ধরনের কুইজ নিবেন তা লিখুন (উঃ সিটি-০১-অধ্যায়-০১ )</h3>
+    <input type="text" class="input-field" name="heading">
+    <h3>কোন বিষয়ের নিবেন </h3>
+    <select class="input-field" name="subject">
+        <option value="">----------</option>
+        {% for sub in subject %}
+        <option value="{{ sub.id }}">{{ sub }}</option>
+        {% endfor %}
+    </select>
+    <h3>কোন ক্লাসের নিবেন সিলেক্ট করুন</h3>
+    <select class="input-field" name="classes">
+        <option value="">----------</option>
+        {% for cls in classes %}
+        <option value="{{ cls.id }}">{{ cls }}</option>
+        {% endfor %}
+    </select>
+    
+    <h3>কুইজ টি কতক্ষন পর্যন্ত নিবেন ( মিনিট )</h3>
+    <input type="text" class="input-field " name="duration">
 
-    <div class="form-group">
-        <label for="option-a">Option A:</label>
-        <input type="text" id="option-a" name="option-a" class="input-field" required>
-    </div>
-
-    <div class="form-group">
-        <label for="option-b">Option B:</label>
-        <input type="text" id="option-b" name="option-b" class="input-field" required>
-    </div>
-
-    <div class="form-group">
-        <label for="option-c">Option C:</label>
-        <input type="text" id="option-c" name="option-c" class="input-field" required>
-    </div>
-
-    <div class="form-group">
-        <label for="option-d">Option D:</label>
-        <input type="text" id="option-d" name="option-d" class="input-field" required>
-    </div>
-
-
-    <button type="submit" id="quiz-create-button" class="edit-button">Create Quiz</button>
+    <button class="edit-button" type="submit">Create The Quiz</button>
 </form>
+
+ <div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>এ পর্যন্ত যেসব পরীক্ষা বা কুইজ নিয়েছেন বা নিবেন</h3>
+            <i class='bx bx-filter'></i>
+            <i class='bx bx-search'></i>
+        </div> 
+    <table>
+        <tbody>
+            {% if quizes %}
+            {% for q in quizes %}
+            <th></th>
+                <tr>
+                    <td>
+                        <a href="{% url "make_question" q.uid %}">
+                            {{q.name}} <span>( {{q.class_name}} , {{q.subject}} )</span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            
+            {% else %}
+            <tr>
+                <td colspan="5"><h2>আপনি কোনো বিষয় এ কোনো কুইজ নেন নি </h2></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+</div>
 
 
 {% endblock content %}
