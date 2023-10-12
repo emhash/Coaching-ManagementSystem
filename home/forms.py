@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from users.models import CustomUser, Student, Teacher, HomeWork, MakeBatch, Question,Answer
+from users.models import CustomUser, Student, Teacher, HomeWork, MakeBatch, Question,Answer, ApplyForLeave
 from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
 class CommonRegistrationForm(UserCreationForm):
@@ -211,6 +211,8 @@ class HomeWorkForm(forms.ModelForm):
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'input-field'
 
+        self.fields['last_day_of_submit'].widget.attrs['placeholder'] = "Ex: 2023-11-12"
+
   
 from users.models import NoteAndSheet
 
@@ -247,6 +249,19 @@ class AnswerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'input-field'
+
+  
+
+class ApplyLeaveForm(forms.ModelForm):
+    class Meta:
+        model = ApplyForLeave
+        fields = ['reason_for_apply', 'description', 'attachment']
+
+    def __init__(self, *args, **kwargs):
+        super(ApplyLeaveForm, self).__init__(*args, **kwargs)
 
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'input-field'

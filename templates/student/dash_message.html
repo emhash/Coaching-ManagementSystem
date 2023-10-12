@@ -53,6 +53,8 @@
 <h1>তোমার জন্য সকল বার্তা</h1>
 <div class="my_msg">
     
+{% if all_message %}
+
 
     {% for m in all_message %}
     {% if m.visited == False %}
@@ -99,6 +101,23 @@
     
     {% endfor %}
 
+{% else %}
+ <br>
+
+<div>
+    
+        <div class="the_box_uv">
+        
+    
+            
+            <h3>NO MESSAGE SEND BY ADMIN YET . BUT THE MODULE WORKS ✔</h3>
+            
+        </div>
+    
+
+</div>
+
+{% endif %}
 
 
 </div>

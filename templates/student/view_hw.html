@@ -1,0 +1,33 @@
+{% extends "student/dash_base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>{{detail_hw.title}}</h3>
+            <p>Provided By - {{detail_hw.teacher}}</p>
+            <i class='bx bx-filter'></i>
+            
+        </div>
+
+        <div>
+            
+            {{detail_hw.hw_detail|safe}}
+        </div>
+        <br>
+        <p>
+            Submit Before : {{detail_hw.last_day_of_submit}}
+        </p>
+    </div>    
+
+</div>    
+
+
+
+
+
+{% endblock content %}

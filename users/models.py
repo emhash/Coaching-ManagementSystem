@@ -1,4 +1,3 @@
-from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .manager import CustomManager
@@ -408,3 +407,11 @@ class Answer(CommonBaseModel):
     class Meta:
         verbose_name_plural = "কইজ উত্তর তৈরি"
 
+class ApplyForLeave(CommonBaseModel):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    reason_for_apply = models.CharField( max_length=250)
+    description = models.TextField()
+    attachment = models.FileField( upload_to="tacher_reasons")
+
+    def __str__(self) -> str:
+        return f" {self.teacher} - {self.created_at} "

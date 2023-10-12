@@ -53,18 +53,20 @@
 <h1>তোমার জন্য বাড়ির কাজ </h1>
 <br>
 <div class="my_msg">
-
-    {% for m in hw %}
-  
+    {% for work in note %}
+    
     <div>
         <div class="the_box_uv">
         
             <span class="material-icons-sharp">
                 
-                <i class='bx bx-task bx-tada'></i>
+                <i class='bx bxs-inbox'></i>
             </span>
-            {{m.title}}
-            <span class="sign"> <a href="">Download</a></span>
+            {% for w in work %}
+            {{w.title}}
+            
+            <span class="sign"> <a href="{% url "downloadfile" w.id %}">Download</a></span>
+            {% endfor %}
         </div>
     </div>
  

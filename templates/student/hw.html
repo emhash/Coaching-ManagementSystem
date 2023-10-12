@@ -2,77 +2,40 @@
 {% load static %}
 
 {% block content %}
-<style>
-    
 
-
-.the_box_uv {
-    background-color: #f0f0f0; 
-    padding: 10px;
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.material-icons-sharp {
-    font-size: 20px; 
-    float:left;
-    margin-right: 0px;
-}
-
-
-.sign {
-    background-color: #ff5733;
-    color: #fff;
-    padding: 5px 10px; 
-    border-radius: 5px; 
-    font-weight: bold;
-}
-
-
-.the_box_v{
-    background-color: rgba(52, 68, 71, 0.555); 
-    padding: 10px;
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-.viewed{
-    padding: 5px 10px; 
-}
-
-</style>
-
-
-<h1>তোমার জন্য বাড়ির কাজ </h1>
-<br>
-<div class="my_msg">
-
-    {% for m in hw %}
-  
-    <div>
-        <div class="the_box_uv">
-        
-            <span class="material-icons-sharp">
-                
-                <i class='bx bx-task bx-tada'></i>
-            </span>
-            {{m.values}}
-            <span class="sign"> <a href="">Download</a></span>
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>তোমার বিষয় ভিত্তিক বাড়ির কাজ</h3>
+            <i class='bx bx-filter'></i>
+            <i class='bx bx-search'></i>
         </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>তোমার বাড়ির কাজ</th>
+                    <th>বিষয়</th>
+                    <th>শিক্ষক</th>
+                    <th>জমা দেওয়ার শেষ সময়</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for queryset in hw %}
+                    {% for m in queryset %}
+                        <tr>
+                            <td><a href="{% url "view_hw" m.id %}">{{ m.title }} </a></td>
+                            <td>{{ m.subject }}</td>
+                            <td>{{ m.teacher }}</td>
+                            <td>{{ m.last_day_of_submit }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
- 
-    {% endfor %}
-
-
-
 </div>
+
 
 {% endblock content %}
 

@@ -1,4 +1,17 @@
 {% extends 'teacher/base.html' %}
 {% load static %}
 {% block content %}
+
+<h1>আপনার সমস্যা লিখে আবেদন করুন</h1>
+<div class="bottom-data">
+    <div class="orders">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form}}
+            <button class="edit-button" type="submit">আবেদন করুন </button>
+        </form>
+    </div>
+</div>
+
+
 {% endblock content %}

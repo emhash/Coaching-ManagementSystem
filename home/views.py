@@ -1,7 +1,7 @@
-from .forms import TeacherProfileForm,PassChangeForm
+from .forms import ApplyLeaveForm, TeacherProfileForm,PassChangeForm
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect,get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect,get_object_or_404, HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate, logout, login
 from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm,HomeWorkForm,QuestionForm,AnswerForm
 # from users.models import Student, Teacher, Guardian,Subjects,ClassWithSubject
@@ -164,15 +164,47 @@ def student_dashb(request, page=None):
             return edit_profile(request)
    
         elif page == 'hw':
-            hw = {1:"New hw added 2023"}
-            context = {'hw':hw}
+            
+            std = Student.objects.get(user=request.user)
+            std_cls_id = std.class_subjects.id
+            std_batch_id = std.batch.id
+            selected_subjects = std.your_subjects
+            sheet = []
+
+            for s in selected_subjects:
+                queryset = HomeWork.objects.filter(
+                    for_class__id=std_cls_id,
+                    batch=std_batch_id,
+                    subject__name=s,
+                )
+                
+                if queryset.exists():
+                    sheet.append(queryset)
+
+            context = {'hw': sheet}
             return render(request, 'student/hw.html', context)
         
         elif page == 'sheet':
-            sheet = {'title':"New note of chapter 3"}
-            context = {'hw':sheet}
+            
+            std = Student.objects.get(user=request.user)
+            std_cls_id = std.class_subjects.id
+            std_batch_id = std.batch.id
+            selected_subjects = std.your_subjects
+            sheet = []
+
+            for s in selected_subjects:
+                queryset = NoteAndSheet.objects.filter(
+                    for_class__id=std_cls_id,
+                    batch=std_batch_id,
+                    subject__name=s,
+                )
+                
+                if queryset.exists():
+                    sheet.append(queryset)
+
+            context = {'note': sheet}
             return render(request, 'student/sheets.html', context)
-        
+
         elif page == 'routine':
 
             student = request.user.student
@@ -262,9 +294,31 @@ def student_dashb(request, page=None):
         return render(request, 'main/404.html')
     
 
+# =--------------------STUDENT DAHBOARD ADITIONAL SETTINGS-----------------------------==
+@login_required
+def view_hw(request, hw_id):
+
+    detail_hw = get_object_or_404(HomeWork, id = hw_id, )
+    
+    context = {
+        'detail_hw':detail_hw,
+    }
+    return render(request, 'student/view_hw.html', context)
+
+# =-------------------------------------------------==
+
+
+
+
+
+
+
+
+
+
 
 # ----------------------------------- DONE (working on add marks) ------------------------------------------------
-
+@login_required
 def add_mark1(request, shift):
     try:
         
@@ -294,7 +348,7 @@ def add_mark1(request, shift):
 # 1. 
 # 2. MODELS HAS BUGS WHEN I TRY TO ADD NEW SUBJECT TO TEACHER,
 #    THERE PREVIOUS ADDED SUBJECT WIPED 
-
+@login_required
 def add_mark2(request, shift, cls):
     try:
         sft = get_object_or_404(Shift, shift_name=shift)
@@ -310,7 +364,7 @@ def add_mark2(request, shift, cls):
     except Exception as e:
         return render(request, 'teacher/error.html', {'error_message': str(e)})
 
-
+@login_required
 def add_mark3(request, shift, cls, subject):
     try:
         sft = get_object_or_404(Shift, shift_name=shift)
@@ -337,7 +391,7 @@ def add_mark3(request, shift, cls, subject):
     except Exception as e:
         return render(request, 'teacher/error.html', {'error_message': str(e)})
 
-
+@login_required
 def add_mark4(request, shift, cls, subject, exam):
     try:
         sft = get_object_or_404(Shift, shift_name=shift)
@@ -415,7 +469,23 @@ def teacher_dashb(request, page=None):
             return render(request, 'teacher/msg.html', context)
         
         elif page == 'apply_leave':
-            return render(request, 'teacher/apply_leave.html')
+            if request.method == "POST":
+                form = ApplyLeaveForm(request.POST, request.FILES)
+                try:
+                    if form.is_valid():
+                        form.save(commit=False)
+                        form.instance.teacher = request.user.teacher
+                        form.save()
+                        messages.success(request, "Congrats! Your application has been submitted to the admin.")
+                        return redirect('teacher_dashb', page='home')
+                except Exception as e:
+                    return render(request, 'teacher/error.html', {'error_message': e})
+            else:
+                form = ApplyLeaveForm()
+            context = {
+                'form' : form, 
+            }
+            return render(request, 'teacher/apply_leave.html', context)
         
         elif page == 'all_setting':
             return redirect('edit_profile')
@@ -686,9 +756,7 @@ def edit_profile(request):
         
         return render(request, 'teacher/edit_profile.html', {'form': form, 'teacher': teacher})
 
-
-#  -------------------------------------
-
+@login_required
 def seen_message(request, msg_id):
 
     if request.user.role == "student":
@@ -721,26 +789,22 @@ def seen_message(request, msg_id):
 
     return render(request, 'main/read_msg.html', context)
 
-
-
-
+@login_required
 def delete_note(request, note_id):
     note = get_object_or_404(NoteAndSheet, pk=note_id, teacher = request.user.teacher)
 
     # Check if the logged-in teacher owns the note
     if request.user.teacher == note.teacher:
         note.delete()
-        messages.success(request, "বিষয়টি সফলভাবে মুছে ফেলা হয়েছে।")
+        messages.success(request, "এই নোট সফলভাবে মুছে ফেলা হয়েছে।")
     else:
         messages.error(request, "আপনি এই নোট মুছতে অনুমতি পাচ্ছেন না।")
 
     return redirect('teacher_dashb', page='note')
 
-
-
-
-def delete_hw(request, note_id):
-    note = get_object_or_404(HomeWork, pk=note_id, teacher = request.user.teacher)
+@login_required
+def delete_hw(request, hw_id):
+    note = get_object_or_404(HomeWork, pk=hw_id, teacher = request.user.teacher)
 
     # Check if the logged-in teacher owns the note
     if request.user.teacher == note.teacher:
@@ -751,6 +815,7 @@ def delete_hw(request, note_id):
 
     return redirect('teacher_dashb', page='hw')
 
+@login_required
 def question_and_answer_make_by_teacher(request, q_id):
     teacher = request.user.teacher
     the_category = get_object_or_404(QuizCategory, uid = q_id, teacher = teacher)
@@ -762,25 +827,30 @@ def question_and_answer_make_by_teacher(request, q_id):
         num_answers = 4
 
     if request.method == 'POST':
-        question_text = request.POST.get('question')
-        mark_ques = request.POST.get('mark_ques')
-        no_option = request.POST.get('no_option')
+        try:
+            question_text = request.POST.get('question')
+            mark_ques = request.POST.get('mark_ques')
+            no_option = request.POST.get('no_option')
 
-        question = Question.objects.create(category = the_category,
-                                            ques_name=question_text,
-                                            mark=mark_ques,
-                                            how_many_answer_for_this_ques = mark_ques,
-                                            )
+            question = Question.objects.create(category = the_category,
+                                                ques_name=question_text,
+                                                mark=mark_ques,
+                                                how_many_answer_for_this_ques = mark_ques,
+                                                )
 
-        for i in range(int(no_option)):
-            answer_text = request.POST.get(f'answer_{i}')
-            is_correct = request.POST.get('correct_answer') == str(i)
-            # print(answer_text, is_correct )
-            
-            answer = Answer.objects.create(answer=answer_text,
-                                            qustion=question,
-                                              is_correct=is_correct)
-        messages.success(request, "Its Hign Chance your question and answer has created!")
+            for i in range(int(no_option)):
+                answer_text = request.POST.get(f'answer_{i}')
+                is_correct = request.POST.get('correct_answer') == str(i)
+                # print(answer_text, is_correct )
+                
+                answer = Answer.objects.create(answer=answer_text,
+                                                qustion=question,
+                                                is_correct=is_correct)
+            messages.success(request, "Its Hign Chance your question and answer has created!")
+
+        except Exception as e:
+            return render(request, 'teacher/error.html', {'error_message': e})
+
         return redirect('teacher_dashb', page='quiz')
 
     else:
@@ -795,8 +865,53 @@ def question_and_answer_make_by_teacher(request, q_id):
     }
     return render(request, 'teacher/question.html', context)
 
+@login_required
+def delete_question(request, q_id):
+    try:
+        question = Question.objects.get(uid=q_id, category__teacher = request.user.teacher)
+        category = question.category
+        if category.teacher == request.user.teacher:
+            question.delete()
+            messages.success(request, "Question has been deleted successfully.")
+        else:
+            messages.error(request, "You do not have permission to delete this question.")
+    except Question.DoesNotExist:
+        messages.error(request, "Question not found.")
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
+
+
+
+
+# ============ This is for click and download file ==========
+
+import os
+from django.http import StreamingHttpResponse 
+from wsgiref.util import FileWrapper
+import mimetypes
+
+def downloadfile(request, id):
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    files = get_object_or_404(NoteAndSheet, id = id)
+    loc = str(files.upload_note.url)
+    filepath = base_dir + loc
+
+    thefile = filepath
+    filename = os.path.basename(thefile)
+    chunk_size = 8192
+    response = StreamingHttpResponse(
+        FileWrapper(open(thefile, 'rb'), chunk_size),
+        content_type=mimetypes.guess_type(thefile)[0],
+    )
+    response['Content-Length'] = os.path.getsize(thefile)
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    return response
+
+
+
+# =-------------------------------------------------------------------------------=
 # ===================================================================================
 
 # NOT DEVELOPED YET .

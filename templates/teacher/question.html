@@ -51,15 +51,15 @@
       <h3>এই প্রশ্নের মান </h3>
       <input class="inputs" type="text" name="mark_ques" required><br>
       <h3>কতগুলো অপশন দিতে চান এই প্রশ্নের জন্য</h3>
-      <input class="inputs" type="text" name="no_option" placeholder="ডিফল্ট হিসেবে ৪ দেওয়া আছে( প্রয়োজন ছাড়া পরিবর্তন করবেন না)" required><br>
+      <input class="inputs" type="text" name="no_option" placeholder="ডিফল্ট হিসেবে ৪ দেওয়া আছে( প্রয়োজন ছাড়া পরিবর্তন করবেন না)" ><br>
       <h2>এই প্রশ্নের জন্য সঠিক উত্তর সহ অন্যান্য অপশন যুক্ত করুন</h2>
       {% for i in loop|custom_range %}
-      <input class="inputs-ans" type="text" name="answer_{{ i }}" placeholder="Option - {{ i }}" required>
+      <input class="inputs-ans" type="text" name="answer_{{ i }}" placeholder="Option - {{ i }}">
       <span class="checkbox-label">
-          <input class="checkbox-label" type="checkbox" name="correct_answer" value="{{ i }}" required> ইহা সঠিক
+          <input class="checkbox-label" type="checkbox" name="correct_answer" value="{{ i }}"> ইহা সঠিক
       </span>
       <br>
-  {% endfor %}
+      {% endfor %}
   
       
       <button class="edit-button" type="submit">আপলোড করুন </button>
@@ -73,21 +73,44 @@
         <h3>আপনি এই কুইজের যেসব প্রশ্ন দিয়েছেন</h3>
       </div> 
 
+      <table>
+        <thead>
+            <tr>
+                <th>প্রশ্ন</th>
+                
+                <th>মুছুন</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+
           {% if my_question %}
           {% for qes in my_question %}
-            <div class="inputs">
-
-              <a href="">
-                  {{qes.ques_name}} <span>( {{q.class_name}} , {{q.subject}} )</span>
+            <tr>
+            <td>
+              <a href="#">
+                {{qes.ques_name}}  
               </a>
-            </div>
-  
-          {% endfor %}
-          
-          {% else %}
-          <h2>আপনি কোনো প্রশ্ন যুক্ত করেন নি </h2></td>
-       
-          {% endif %}
+            </td>
+
+            <td>
+              <form method="post" action="{% url 'delete_question' qes.uid %}">
+                {% csrf_token %}
+                <button type="submit" style="background: red;padding: 5px 5px 5px 5px; margin:0px 0px 0px 0px;" class="edit-button">বাতিল করুন</button>
+              </form>
+            </td>
+            
+        </tr>
+        {% endfor %}
+            
+            
+            {% else %}
+            <tr>
+              <td><h2>আপনি কোনো প্রশ্ন যুক্ত করেন নি </h2></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
      
 </div>
 </div>

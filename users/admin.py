@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet,QuizCategory,Question,Answer
+from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet,QuizCategory,Question,Answer,ApplyForLeave
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -72,3 +72,13 @@ class QuestionAdmin(admin.ModelAdmin):
 admin.site.register(QuizCategory, ExcludeUidAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer,ExcludeUidAdmin)
+
+
+class ApplyForLeaveAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'reason_for_apply', 'created_at', 'attachment')  
+    list_filter = ('teacher', 'created_at')  
+
+    list_per_page = 20
+
+
+admin.site.register(ApplyForLeave,ApplyForLeaveAdmin)

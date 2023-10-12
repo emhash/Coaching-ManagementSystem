@@ -1,0 +1,291 @@
+# 1. Display the path of your current directory.
+echo "Current directory: $(pwd)"
+
+# 2. Create a new directory called "LabFiles" in your home directory.
+mkdir ~/LabFiles
+
+# 3. Navigate into the "LabFiles" directory.
+cd ~/LabFiles
+
+# 4. Create 3 new directories inside "LabFiles": FileDir1, FileDir2, FileDir3.
+mkdir FileDir1 FileDir2 FileDir3
+
+# 5. Create three new files inside the new directories.
+touch FileDir1/file1.txt
+touch FileDir2/file2.txt
+
+# 6. List the files in the "LabFiles" directory using the 'ls' command.
+ls ~/LabFiles
+
+# 7. Add some contents in "file1.txt" and "file2.txt" file from the terminal.
+echo "Contents for file1.txt" > FileDir1/file1.txt
+echo "Contents for file2.txt" > FileDir2/file2.txt
+
+# 8. Display the contents of "file1.txt" using the 'cat' command.
+cat FileDir1/file1.txt
+
+# 9. Make a copy of "file1.txt" called "backup.txt" using the 'cp' command in the "LabFiles" directory with absolute addressing.
+cp FileDir1/file1.txt ~/LabFiles/backup.txt
+
+# 10. Rename "file2.txt" to "newfile.txt."
+mv FileDir2/file2.txt FileDir2/newfile.txt
+
+# 11. Move "newfile.txt" to FileDir3 using the 'mv' command with relative addressing.
+mv FileDir2/newfile.txt FileDir3/
+
+# 12. Remove "file1.txt" from the FileDir1 directory.
+rm FileDir1/file1.txt
+
+
+
+
+
+
+================---------- LAB 02 -----------------==========================
+
+# 1. In a directory named ‘oslab2’, create a file permissions.txt
+mkdir oslab2
+touch oslab2/permissions.txt
+
+# 2. Add some text to the file.
+echo "This is some text in the file." > oslab2/permissions.txt
+
+# 3. Check the default permissions.
+ls -l oslab2/permissions.txt
+
+# 4. Remove read and write permission by the user using symbolic mode.
+chmod u-rw oslab2/permissions.txt
+
+# 5. Check if you can still edit the file.
+echo "Trying to edit the file" >> oslab2/permissions.txt
+# You should see a permission denied error.
+
+# 6. Add back the permissions using numerical mode.
+chmod u+rw oslab2/permissions.txt
+
+# 7. Check if you can edit the file.
+echo "Editing the file again" >> oslab2/permissions.txt
+
+
+Task 2:
+
+
+# 1. In a directory named ‘oslab2’
+mkdir oslab2
+
+# 2. Download the fruits.txt file
+# You can use a tool like `wget` to download the file from a URL.
+# For example, let's assume the file is available at a URL:
+wget -P oslab2 https://example.com/fruits.txt
+
+# 3. Move the file to the oslab2 directory using terminal commands
+# You can use the `mv` command to move the file:
+mv fruits.txt oslab2/
+
+# 4. Use the 'head' command to display the first 10 lines of "fruits.txt".
+head -n 10 oslab2/fruits.txt
+
+# 5. Use the 'tail' command to display the last 5 lines of "fruits.txt".
+tail -n 5 oslab2/fruits.txt
+
+# 6. Count the number of lines, words, and characters in "fruits.txt" using the 'wc' command.
+wc oslab2/fruits.txt
+
+
+
+TASK 3 :
+
+# 1. Create a new user named "testuser".
+sudo useradd testuser
+
+# 2. Set a password for "testuser" using the 'passwd' command.
+sudo passwd testuser
+# You will be prompted to enter and confirm the password.
+
+# 3. Check if the user exists.
+id testuser
+
+# 4. Create a group named ‘newGroup’
+sudo groupadd newGroup
+
+# 5. Add the test user to the newly created group.
+sudo usermod -aG newGroup testuser
+
+# 6. Rename the group to ‘oldGroup’
+sudo groupmod -n oldGroup newGroup
+
+# 7. Check if the group exists.
+getent group oldGroup
+
+# 8. Delete the group and check if the user still exists.
+sudo groupdel oldGroup
+getent group oldGroup
+
+# 9. Delete the user.
+sudo userdel -r testuser
+
+
+-----------=============== LAB 3 ------========================
+
+
+pyramid shape with '*' characters:
+
+#!/bin/bash
+
+# Input the number of rows for the pyramid.
+read -p "Enter the number of rows for the pyramid: " num_rows
+
+# Outer loop for each row.
+for ((i=1; i<=num_rows; i++))
+do
+    # Inner loop for spaces.
+    for ((j=i; j<num_rows; j++))
+    do
+        echo -n " "
+    done
+
+    # Inner loop for '*' characters.
+    for ((k=1; k<=2*i-1; k++))
+    do
+        echo -n "*"
+    done
+
+    # Move to the next line for the next row.
+    echo
+done
+
+
+
+a year is a leap year:
+
+#!/bin/bash
+
+# Input a year from the user.
+read -p "Enter a year: " year
+
+if [ $((year % 400)) -eq 0 ] || [ $((year % 4)) -eq 0 -a $((year % 100)) -ne 0 ]; then
+    echo "$year is a leap year."
+else
+    echo "$year is not a leap year."
+fi
+
+
+
+
+
+
+Find missing word from array :
+
+
+#!/bin/bash
+
+find_missing() {
+  local arr=("${@}")
+  local n=${#arr[@]}
+  local sum=0
+  local i
+
+  for ((i=1; i<n; i++)); do
+    sum=$((sum + arr[i]))
+  done
+
+  local expected_sum=$(( (n * (n + 1)) / 2 ))
+  local missing=$(( expected_sum - sum ))
+
+  echo "Missing number: $missing"
+}
+
+# Example usage
+read -p "Enter a list : " line
+list=(${line})
+find_missing "${list[@]}"
+
+
+
+
+---------------- TASK 6 -----------------
+
+
+
+
+is_prime() {
+  num=$1
+  if [ $num -lt 2 ]; then
+    echo "Not a Prime number"
+    return
+  fi
+
+  for ((i=2; i*i<=num; i++)); do
+    if [ $((num % i)) -eq 0 ]; then
+      echo "Not a Prime number"
+      return
+    fi
+  done
+
+  echo "Prime number"
+}
+
+# Usage
+is_prime 13
+is_prime 15
+
+
+
+
+
+
+
+isLeapYear() {
+  year=$1
+  if [ $((year % 4)) -eq 0 -a $((year % 100)) -ne 0 -o $((year % 400)) -eq 0 ]; then
+    echo "Leap Year"
+  else
+    echo "Not Leap Year"
+  fi
+}
+
+# Usage
+isLeapYear 2012
+isLeapYear 2013
+
+
+
+
+is_palindrome() {
+  str="$1"
+  # Remove spaces and punctuation and convert to lowercase
+  str=$(echo "$str" | tr -d '[:punct:]' | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+  reverse_str=$(echo "$str" | rev)
+
+  if [ "$str" == "$reverse_str" ]; then
+    echo "palindrome"
+  else
+    echo "not a palindrome"
+  fi
+}
+
+# Usage
+is_palindrome "noon"
+is_palindrome "abba"
+
+
+
+
+
+sort_array() {
+  array=("$@")
+  sorted_array=($(for i in "${array[@]}"; do echo "$i"; done | sort -n))
+  echo "${sorted_array[@]}"
+}
+
+# Usage
+sorted=$(sort_array 5 6 3 1 2 4)
+echo "$sorted"
+
+
+
+
+
+
+
+

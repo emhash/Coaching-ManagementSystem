@@ -1,4 +1,4 @@
-from users.models import Student, MessageForTeacher
+from users.models import Student
 import random
 
 def calculate_grade(marks, out_of):

@@ -190,9 +190,9 @@ aside .sidebar a:last-child{
 
 aside .sidebar a.active{
     width: 100%;
-    border-radius: 20px;
+    border-radius: 15px;
     color: var(--color-primary);
-    background-color: var(--color-light);
+    background-color: #0f0444;
     margin-left: 0;
 }
 
@@ -240,7 +240,9 @@ main .analyse > div{
     border-radius: var(--card-border-radius);
     margin-top: 1rem;
     /* border-top: #110d24 solid; */
-    box-shadow: 0 0.9rem 0.7rem rgb(12, 0, 117);
+    /* box-shadow: 4px 4px 0px 1px rgba(51, 1, 233, 0.719);  */
+    box-shadow: 0 5px 7px rgba(55, 0, 255, 0.897); 
+    
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -376,10 +378,6 @@ main .recent-orders a{
     
     color: var(--color-dark-variant);
 }
-
-
- 
-
 
 
 
@@ -849,7 +847,7 @@ main .recent-orders a{
 }
 
 .bottom-data .orders table tbody tr:hover{
-    background: #569397;
+    background: #39cef37c;
 }
 
 .bottom-data .orders table tr td input {
