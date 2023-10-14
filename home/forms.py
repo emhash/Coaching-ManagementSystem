@@ -261,6 +261,10 @@ class AnswerForm(forms.ModelForm):
   
 
 class ApplyLeaveForm(forms.ModelForm):
+    attachment = forms.FileField(
+        widget=forms.FileInput(attrs={'required': False})
+    )
+    
     class Meta:
         model = ApplyForLeave
         fields = ['reason_for_apply', 'description', 'attachment']
@@ -270,4 +274,4 @@ class ApplyLeaveForm(forms.ModelForm):
 
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'input-field'
-
+            

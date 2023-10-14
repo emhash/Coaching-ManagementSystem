@@ -410,9 +410,10 @@ main .recent-orders a{
 /* CSS for the message box */
 .message-box {
     border: 1px dashed rgba(233, 56, 218, 0.815);
-    background-color: #f3f3f3;
+    background-color: #dcf1d9;
     padding: 10px;
     margin-bottom: 20px;
+    font-size: 16px;
     position: relative;
 }
 
@@ -422,8 +423,8 @@ main .recent-orders a{
     top: 5px;
     right: 5px;
     cursor: pointer;
-    font-family: 'Material Icons Sharp', sans-serif;
-    font-size: 18px;
+    
+    font-size: 20px;
     color: #333;
 }
 

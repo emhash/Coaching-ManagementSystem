@@ -7,11 +7,13 @@
     <div class="orders">
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{form}}
-            <button class="edit-button" type="submit">আবেদন করুন </button>
+            {% for field in form.visible_fields %}
+                {{ field.label_tag }}
+                {{ field }}
+            {% endfor %}
+            <button class="edit-button" type="submit">আবেদন করুন</button>
         </form>
     </div>
 </div>
-
 
 {% endblock content %}

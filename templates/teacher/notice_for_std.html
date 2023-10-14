@@ -37,51 +37,40 @@
 
     </div>
 </div>
-<h1>
-যেসব Notice এ পর্যন্ত দিয়েছেন 
-</h1>
 
 <div class="bottom-data">
     <div class="orders">
         <div class="header">
             <i class='bx bx-receipt'></i>
-            <h3>আপনি যেসব বিষয় পড়ান</h3>
+            <h3>যেসব Notice এ পর্যন্ত দিয়েছেন </h3>
             <i class='bx bx-filter'></i>
             <i class='bx bx-search'></i>
         </div> 
     <table>
         <thead>
             <tr>
-                <th>শিফট </th>
-                <th>শ্রেণী</th>
-                <th>বিষয়</th>
-                <th>নোট</th>
+                <th>শিক্ষার্থী  </th>
+                <th>নোটিস</th>
                 <th>মুছুন</th>
                 
-                
-                <th></th>
             </tr>
         </thead>
         <tbody>
 
-            {% if subs %}
-            {% for s in subs %}
+            {% if notices %}
+            
+            {% for N in notices %}
             <tr>
             <td>
-                {{s.batch.shift}}
+                {{N.student}}
             </td>
             
             <td>
-                {{s.for_class}}
+                {{N.notice}}
             </td>
+            
             <td>
-                {{s.subject}}
-            </td>
-            <td>
-                {{s.title}}
-            </td>
-            <td>
-                <form action="{% url 'delete_note' s.id %}" method="POST">
+                <form action="{% url "delete_notice" N.uid %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="edit-button">DELETE</button>
                 </form>

@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect,get_object_or_404, HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate, logout, login
 from .forms import CommonRegistrationForm, StudentForm, TeacherForm,StudentEditForm,NoteAndSheetForm,NoteAndSheetForm,HomeWorkForm,QuestionForm,AnswerForm
-# from users.models import Student, Teacher, Guardian,Subjects,ClassWithSubject
+from datetime import datetime
 from users.models import *
 from .more_backend import *
 from django.contrib.auth.decorators import login_required
@@ -96,7 +96,7 @@ def authentication(request):
             else:
                 if request.method == 'POST':
                     selected_subjects = request.POST.getlist('selected_subjects')
-                    print("Selected subjects:", selected_subjects)  
+                    # print("Selected subjects:", selected_subjects)  
                     student_profile.your_subjects = selected_subjects 
                     student_profile.choose_subjects = True
                     
@@ -311,7 +311,7 @@ def student_dashb(request, page=None):
             
 
             schedule = ExamSchedule.objects.filter(batch__student = request.user.student)
-            print(schedule)
+            # print(schedule)
 
             context={
                 'schedule':schedule,
@@ -334,9 +334,10 @@ def student_dashb(request, page=None):
                 if queryset.exists():
                     sheet.append(queryset)
 
-            from datetime import datetime
+            
             current_date = datetime.now().date()
             one_day_ahead = current_date + timedelta(days=1)
+            
             
             reminders = []
             for s in sheet:
@@ -345,10 +346,20 @@ def student_dashb(request, page=None):
                         reminders.append(s)
 
             notiss = NoticeForStudent.objects.filter(student=std)
+            notice =[]
             
+            
+            for nts in notiss:
+                two_day_back= nts.notice_last_for + timedelta(days=-2)
+                if two_day_back <= current_date and current_date <= nts.notice_last_for:
+
+                    notice.append(nts)
+                    
+
+
             context = {
                 'reminders': reminders,
-                'notice': notiss,
+                'notice': notice,
                        
                        }
             return render(request, 'student/dash_home.html', context)
@@ -591,18 +602,24 @@ def teacher_dashb(request, page=None):
                 the_title = request.POST.get('heading') 
                 selected_subject_id = request.POST.get('subject')
                 selected_class_id = request.POST.get('classes')
-                
+                # Get the start_from value from the form
+                start_from_str = request.POST.get('start_from')
+                print(start_from_str)
+                # Correct format for datetime-local input
+                start_from = datetime.strptime(start_from_str, '%Y-%m-%dT%H:%M')
+    
                 # Create a QuizCategory instance and set its fields
                 quiz_category = QuizCategory()
                 quiz_category.name = the_title
                 quiz_category.teacher = teacher
                 quiz_category.class_name_id = selected_class_id
                 quiz_category.subject_id = selected_subject_id
-                quiz_category.duration = request.POST.get('duration')          
+                quiz_category.duration = request.POST.get('duration')
+                quiz_category.start_from = start_from
                 try:
                     quiz_category.save()
-                    messages.success(request, "Congrats! Now you can create a quiz.")
-                    redirect('teacher_dashb', page='quiz')
+                    messages.success(request, "Congrats! কইজ এর তালিকা ও ক্যাটাগরি যুক্ত করা হয়েছে ")
+                    return redirect('teacher_dashb', page='quiz')
                 except Exception as e:
                     return render(request, 'teacher/error.html', {'error_message': e})
 
@@ -722,6 +739,7 @@ def teacher_dashb(request, page=None):
             
             context = {
                 'mystudent': all_students,
+                'notices': notiss,
             }   
             return render(request, 'teacher/notice_for_std.html', context)
 
@@ -754,7 +772,7 @@ def teacher_dashb(request, page=None):
 
             # ------------------- Reminders message --------------------
             current_time = datetime.now().time()
-            one_hour_ahead = (datetime.combine(datetime.today(), current_time) + timedelta(hours=1)).time()
+            # one_hour_ahead = (datetime.combine(datetime.today(), current_time) + timedelta(hours=1)).time()
 
             reminder = []
             for b in batch_of_teacher:
@@ -766,7 +784,7 @@ def teacher_dashb(request, page=None):
                 if current_time >= one_hour_back_time and current_time <= og_T:
                     reminder.append(b)
             # -----------------------------------------
-            print(reminder)
+            # print(reminder)
             context = {
                 'newuser': current_page,
                 'reminders' : reminder,
@@ -794,7 +812,7 @@ def change_password(request):
                 login(request, user)
                 return redirect('change_password')
             else:
-                messages.error(request, 'Please correct the errors below.')
+                messages.error(request, 'Please correct the errors.')
 
         else:
             form = PassChangeForm(request.user)
@@ -830,7 +848,7 @@ def edit_profile(request):
             form = StudentEditForm(request.POST, request.FILES, instance=student)
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Your profile was successfully updated.')
+                messages.success(request, 'আপনার প্রফাইল সফলভাবে আপডেট হয়েছে ')
                 
                 return redirect('edit_profile')
             else:
@@ -848,7 +866,7 @@ def edit_profile(request):
             form = TeacherProfileForm(request.POST, request.FILES, instance=teacher)
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Your profile was successfully updated.')
+                messages.success(request, 'Congrats! আপনার প্রফাইল সফলভাবে আপডেট হয়েছে')
                 
                 return redirect('edit_profile')
             else:
@@ -893,6 +911,18 @@ def seen_message(request, msg_id):
     return render(request, 'main/read_msg.html', context)
 
 @login_required
+def delete_notice(request, n_id):
+    note = get_object_or_404(NoticeForStudent, pk=n_id, teacher = request.user.teacher)
+
+    if request.user.teacher == note.teacher:
+        note.delete()
+        messages.success(request, "এই নোটিশটি মুছে ফেলা হয়েছে।")
+    else:
+        messages.error(request, "আপনি ইহা মুছতে অনুমতি পাচ্ছেন না।")
+
+    return redirect('teacher_dashb', page='notice')
+
+@login_required
 def delete_note(request, note_id):
     note = get_object_or_404(NoteAndSheet, pk=note_id, teacher = request.user.teacher)
 
@@ -912,9 +942,9 @@ def delete_hw(request, hw_id):
     # Check if the logged-in teacher owns the note
     if request.user.teacher == note.teacher:
         note.delete()
-        messages.success(request, "বিষয়টি সফলভাবে মুছে ফেলা হয়েছে।")
+        messages.success(request, "এই বাড়ির কাজটি মুছে ফেলা হয়েছে।")
     else:
-        messages.error(request, "আপনি এই নোট মুছতে অনুমতি পাচ্ছেন না।")
+        messages.error(request, "আপনি অনুমতি পাচ্ছেন না।")
 
     return redirect('teacher_dashb', page='hw')
 
@@ -949,7 +979,7 @@ def question_and_answer_make_by_teacher(request, q_id):
                 answer = Answer.objects.create(answer=answer_text,
                                                 qustion=question,
                                                 is_correct=is_correct)
-            messages.success(request, "Its Hign Chance your question and answer has created!")
+            messages.success(request, "একটি নতুন কুইজ ক্যাটাগরি তৈরি হয়েছে")
 
         except Exception as e:
             return render(request, 'teacher/error.html', {'error_message': e})
@@ -975,11 +1005,11 @@ def delete_question(request, q_id):
         category = question.category
         if category.teacher == request.user.teacher:
             question.delete()
-            messages.success(request, "Question has been deleted successfully.")
+            messages.success(request, "এই প্রশ্নটি ডিলিট করা হয়েছে")
         else:
-            messages.error(request, "You do not have permission to delete this question.")
+            messages.error(request, "এই প্রশ্নটি ডিলিট করার অনুমতি পাচ্ছেন না")
     except Question.DoesNotExist:
-        messages.error(request, "Question not found.")
+        messages.error(request, "প্রশ্ন খুজে পাওয়া যায় নি")
     
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 

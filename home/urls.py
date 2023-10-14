@@ -17,6 +17,7 @@ urlpatterns = [
     path('student_dashboard/', RedirectView.as_view(pattern_name='std_dashboard_home')),
     path('student_dashboard/<str:page>', student_dashb, name="student_dashb"),
     path('view_hw/<str:hw_id>', view_hw, name="view_hw"),
+    path('delete_notice/<str:n_id>', delete_notice, name="delete_notice"),
     
     
     #   TEACHER ALL DASHBOARD LINK --->

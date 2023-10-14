@@ -374,6 +374,7 @@ class QuizCategory(CommonBaseModel):
     class_name = models.ForeignKey(ClassWithSubject, on_delete=models.CASCADE,null=True,blank=True)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE,null=True,blank=True)
     duration = models.IntegerField(default=5)
+    start_from = models.DateTimeField( auto_now=False, auto_now_add=False, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.name

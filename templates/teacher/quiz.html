@@ -12,6 +12,7 @@
 
 <form method="POST">
     {% csrf_token %}
+    
     <h3>আপনি যে ধরনের কুইজ নিবেন তা লিখুন (উঃ সিটি-০১-অধ্যায়-০১ )</h3>
     <input type="text" class="input-field" name="heading">
     <h3>কোন বিষয়ের নিবেন </h3>
@@ -32,6 +33,9 @@
     <h3>কুইজ টি কতক্ষন পর্যন্ত নিবেন ( মিনিট )</h3>
     <input type="text" class="input-field " name="duration">
 
+    <h3>কুইজ টির শুরুর তারিখ ও সময়</h3>
+    <input type="datetime-local" class="input-field" name="start_from">
+    
     <button class="edit-button" type="submit">Create The Quiz</button>
 </form>
 
