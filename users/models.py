@@ -284,7 +284,7 @@ class CreateExam(models.Model):
 class MarksOfStudent(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     std = models.ForeignKey(Student, on_delete=models.CASCADE)
-    student_id = models.IntegerField()  # Renamed the field to student_id
+    student_id = models.IntegerField()  
     subject = models.CharField(max_length=150)
     exam_type = models.ForeignKey(CreateExam, null=True, blank=True, on_delete=models.CASCADE)
     mark = models.IntegerField()
@@ -415,3 +415,34 @@ class ApplyForLeave(CommonBaseModel):
 
     def __str__(self) -> str:
         return f" {self.teacher} - {self.created_at} "
+    
+
+class NoticeForStudent(CommonBaseModel):
+    notice = models.CharField( max_length=250)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    notice_last_for = models.DateField(auto_now=False, auto_now_add=False)
+    
+    def __str__(self) -> str:
+        return f"To {self.student} : {self.notice} " 
+    
+
+class StudetFeedback(models.Model):
+    already_rated = models.BooleanField(default=False)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    rate_us = models.IntegerField( null=True, blank=True)
+    report = models.TextField(null=True, blank=True)
+
+
+    def __str__(self):
+        return f"{self.student} rates {self.rate_us}"
+
+
+class ExamSchedule(models.Model):
+    name = models.CharField( max_length=150)
+    file = models.FileField( upload_to="xm_schedule")
+    batch = models.ForeignKey( Batch, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+

@@ -1,31 +1,44 @@
 {% extends 'teacher/base.html' %}
 {% load static %}
 {% block content %}
+
 <h1>যেসব অধ্যায়ের এবং ক্লাসের নোট প্রদান করতে চান করুন</h1>
-{% for m in messages %}
+
+{% for message in messages %}
     <div class="message-box">
-        {{ m }}
-        <span class="close-button" onclick="this.parentElement.style.display='none'"><i class='bx bxs-no-entry'></i></span>
+        {{ message }}
+        <span class="close-button" onclick="this.parentElement.style.display='none'">
+            <i class='bx bxs-no-entry'></i>
+        </span>
     </div>
 {% endfor %}
 
-
 <div class="bottom-data">
     <div class="orders">
-        
-        <form action="" method = "POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{form.media}}
-            {{form}}
-        
-            <button type="submit" id="quiz-create-button" class="edit-button">Upload Note</button>
-        </form>
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <label for="the_student">কাকে নোটিশ দিবেন</label>
+        <select name="the_student" class="input-field">
+            <option value="">Select student</option>
+            {% for std in mystudent %}
+                <option value="{{ std.id }}">{{ std.s_name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="notice">নোটিশ লিখুন</label>
+        <input type="text" name="notice" class="input-field"></input>
+
+        <label for="notice_last_for">নোটিশটির স্থায়ীকাল (উঃ আগামি ক্লাস হবে না। এখানে তারিখ আগামি দিন পর্যন্ত দিন) </label>
+        <input type="date" name="notice_last_for" class="input-field">
+
+        <button type="submit" id="notice-send-button" class="edit-button">Send Notice</button>
+    </form>
 
     </div>
 </div>
-
 <h1>
-যেসব বিষয়ের নোট এ পর্যন্ত দিয়েছেন 
+যেসব Notice এ পর্যন্ত দিয়েছেন 
 </h1>
 
 <div class="bottom-data">

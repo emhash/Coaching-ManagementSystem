@@ -1,16 +1,18 @@
-{% extends "student/dash_base.html" %}
-{% load static %}
+{% extends 'student/dash_base.html' %}
 
 {% block content %}
 
-<h1>তোমার জন্য বাড়ির কাজ </h1>
+
+
+
+<h1>তোমাদের পরীক্ষার রুটিনসমূহ </h1>
 <br>
 <div class="my_msg">
-    {% for work in note %}
+    {% for work in schedule %}
     
     <div>
         <div class="the_box_uv">
-        
+            
             <span class="material-icons-sharp">
                 
                 <i class='bx bxs-inbox'></i>
@@ -22,14 +24,11 @@
             {% endfor %}
         </div>
     </div>
- 
+    
     {% endfor %}
-
-
-
+    
+    
+    
 </div>
 
 {% endblock content %}
-
-
-

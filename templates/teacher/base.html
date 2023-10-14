@@ -41,6 +41,7 @@
                {% url 'teacher_dashb' page='hw' as hw %}  
                {% url 'teacher_dashb' page='your_student' as your_student %}  
                {% url 'teacher_dashb' page='wallet' as wallet %}  
+               {% url 'teacher_dashb' page='notice' as notice %}  
                                 
 
                <a {% if request.path == home %}class="active"{% endif %} href="{% url 'teacher_dashb' page='home' %}">
@@ -52,7 +53,7 @@
         
                <a {% if request.path == add_mark %}class="active"{% endif %} href="{% url 'teacher_dashb' page='add_mark' %}">
                    <span >
-                    <i class='bx bx-add-to-queue'></i>
+                    <i class='bx bxs-add-to-queue'></i>
                    </span>
                    <h3>মার্কস প্রদান</h3>
                </a>
@@ -81,13 +82,13 @@
                
                <a {% if request.path == apply_leave %}class="active"{% endif %} href="{% url 'teacher_dashb' page='apply_leave' %}">
                    <span >
-                    <i class='bx bx-receipt'></i>
+                    <i class='bx bxs-receipt'></i>
                    </span>
                    <h3>ছুটির আবেদন</h3>
                </a>
                <a {% if request.path == all_setting %}class="active"{% endif %} href="{% url 'teacher_dashb' page='all_setting' %}">
                    <span >
-                       <i class='bx bx-cog bx-spin'  ></i>
+                       <i class='bx bxs-cog bx-spin'  ></i>
                    </span>
                    <h3>সেটিংস্</h3>
                </a>
@@ -97,9 +98,15 @@
                 </span>
                    <h3>ওয়ালেট</h3>
                </a>
+               <a {% if request.path == notice %}class="active"{% endif %} href="{% url 'teacher_dashb' page='notice' %}">
+                   <span >
+                    <i class='bx bxs-notification'></i>
+                   </span>
+                   <h3>নোটিশ পাঠান</h3>
+               </a>
                <a {% if request.path == hw %}class="active"{% endif %} href="{% url 'teacher_dashb' page='hw' %}">
                    <span >
-                    <i class='bx bx-message-square-add'></i>
+                    <i class='bx bxs-message-square-add'></i>
                    </span>
                    <h3>বাড়ির কাজ দিন</h3>
                </a>

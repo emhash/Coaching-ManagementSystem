@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet,QuizCategory,Question,Answer,ApplyForLeave
+from .models import CustomUser, Student, Teacher, Guardian, ClassWithSubject,Subjects,Shift,Batch,MakeBatch,MarksOfStudent,CreateExam,MessageForTeacher,MessageForStudent,HomeWork,NoteAndSheet,QuizCategory,Question,Answer,ApplyForLeave,NoticeForStudent,StudetFeedback,ExamSchedule
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -82,3 +82,6 @@ class ApplyForLeaveAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ApplyForLeave,ApplyForLeaveAdmin)
+admin.site.register(NoticeForStudent)
+admin.site.register(StudetFeedback)
+admin.site.register(ExamSchedule)

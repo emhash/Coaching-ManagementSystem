@@ -15,6 +15,7 @@
                     <th>তোমার ক্লাস</th>
                     <th>বিষয়</th>
                     <th>শিক্ষক</th>
+                    <th>শিক্ষক(Pic)</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,7 @@
                             <td>{{ d.class_name }}</td>
                             <td>{{ d.subject }}</td>
                             <td>{{ d.teacher }}</td>
+                            <td><img src="{{ d.teacher.profile_pic.url }}" alt="teacher profile pic"></td>
                         </tr>
                     {% endfor %}
                 {% endfor %}

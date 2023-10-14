@@ -31,7 +31,7 @@
         </div>
 
         <div class="sales">
-            <a href="">
+            <a href="xm_schedule">
                 <div class="status">
                     <div class="info">
                         <h3>সকল সিডিউল</h3>
@@ -102,59 +102,68 @@
     </div>
 
     <div class="bottom-data">
+        
         <div class="orders">
             <div class="header">
-                <i class='bx bx-receipt'></i> 
-                <h3>আজকের নোটিশ!</h3>
+                <i class='fa fa-receipt'></i>
+                <h3>তোমার সকল নোটিশ</h3>
+                <i class='fa fa-filter'></i>
+                <i class='fa fa-search'></i>
             </div>
-            <marquee behavior="scroll" direction="left">
-                <h1 style="color: #ff0033;">আজকে বাংলা ক্লাস হবে না।</h1>
-            </marquee>
-            <marquee behavior="scroll" direction="left">
-                <h1 style="color: #ff0033;">আজকে গনিত ক্লাস হবে না।</h1>
-            </marquee>
-            <marquee behavior="scroll" direction="left">
-                <h1 style="color: #ff0033;">আজকে রসায়ন ক্লাস হবে না।</h1>
-            </marquee>
-            <marquee behavior="scroll" direction="left">
-                <h1 style="color: #ff0033;">আজকে শারিরিক শিক্ষা ক্লাস হবে না।</h1>
-            </marquee>
-            <marquee behavior="scroll" direction="left">
-                <h1 style="color: #ff0033;">আজকে তোমার ক্লাস হবে না।</h1>
-            </marquee>
-            <marquee behavior="scroll" direction="left">
-                <h1 style="color: #ff0033;">আজকে কিছুই হবে না।</h1>
-            </marquee>
-        </div>
+            {% if notice %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>নোটিশ</th>
+                        <th>শিক্ষক</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for n in notice %}
+                    
+                    <tr>
+                        <td style="color:green;border-right: 1px dashed #FF0060;margin-right:5px;">{{n.notice}}</td>
+                        <td>{{n.teacher}}</td>
+                        
+
+                    </tr>
+        
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div style="color:red; display: flex;padding-top:35px; justify-content:center;">
+            <h3>এখনো কেউ কোনো নোটিশ দেয় নি। তাই কিছু দেখাচ্ছে না</h3>
+            </div>
+            {% endif %}
+
+        </div>        
 
         <!-- Reminders -->
         <div class="reminders">
             <div class="header">
                 <i class='bx bx-note'></i> 
-                <h3>Remiders</h3>
-            </div>
+                <h3>স্মৃতিচিহ্ন (Remiders)</h3>
+            </div> 
             <ul class="task-list">
-                <li class="completed">
-                    <div class="task-title">
-                        <i class='bx bx-check-circle'></i>
-                        <p>কালকের ক্লাস আজকে</p>
-                    </div>
-                    <i class='bx bx-dots-vertical-rounded'></i>
-                </li>
-                <li class="completed">
-                    <div class="task-title">
-                        <i class='bx bx-check-circle'></i> 
-                        <p>গনিত বাড়ির কাজ ৫.৮.২০২৩ জমা</p>
-                    </div>
-                    <i class='bx bx-dots-vertical-rounded'></i> 
-                </li>
+                {% for N in reminders %}
                 <li class="not-completed">
                     <div class="task-title">
                         <i class='bx bx-x-circle'></i> 
-                        <p>শিক্ষা সফর 7AM 7 october.</p>
+                        <p>
+                            {% for rem in N %}
+                            {{rem.title}}
+                            ( {{rem.last_day_of_submit}} )
+
+                            {% endfor %}
+
+                        </p>
                     </div>
                     <i class='bx bx-dots-vertical-rounded'></i> 
                 </li>
+                {% endfor %}
+
             </ul>
         </div>
     </div>

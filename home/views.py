@@ -142,15 +142,36 @@ def authentication(request):
         else:
             return render(request, 'registration/register_guardian.html')
     else:
-        return HttpResponse("NOT A VALID ROLE FOUND FOR YOU")
+        return render(request, 'main/404.html')
 
 
 @login_required
 def student_dashb(request, page=None):
     if request.user.role == 'student':
+
         if page == 'feedback':
-            return render(request, 'student/dash_feedback.html')
-        
+            student = request.user.student
+            feedback, created = StudetFeedback.objects.get_or_create(student=student, defaults={
+                'already_rated': False,
+                'rate_us': 0,
+                'report': ''
+            })
+
+            if request.method == "POST":
+                try:
+                    feedback.already_rated = True
+                    feedback.rate_us = request.POST.get('star_rating')
+                    feedback.report = request.POST.get('speech')
+                    feedback.save()
+                    return redirect('student_dashb', page='feedback')
+                except Exception as e:
+                    return render(request, 'student/error.html', {"error_message": e})
+
+            context = {
+                'data': feedback,
+            }
+            return render(request, 'student/dash_feedback.html', context)
+
         elif page == 'message':
             all_msg = MessageForStudent.objects.filter(message_for = request.user.student).order_by('-upload_at', 'visited')
             
@@ -160,7 +181,6 @@ def student_dashb(request, page=None):
 
             return render(request, 'student/dash_message.html', context)
         elif page == 'settings':
-
             return edit_profile(request)
    
         elif page == 'hw':
@@ -286,10 +306,54 @@ def student_dashb(request, page=None):
             #     print(m.mark)
             
             return render(request, 'student/dash_result.html', context={'marks':mark})
-        
+
+        elif page == 'xm_schedule':
+            
+
+            schedule = ExamSchedule.objects.filter(batch__student = request.user.student)
+            print(schedule)
+
+            context={
+                # 'schedule':schedule,
+            }
+            return render(request, 'student/xm_schedule.html', context)
+
         else:
-            # Handle invalid page name or other default behavior
-            return render(request, 'student/dash_home.html')
+            std = Student.objects.get(user=request.user)
+            std_cls_id = std.class_subjects.id
+            std_batch_id = std.batch.id
+            selected_subjects = std.your_subjects
+            sheet = []
+
+            for s in selected_subjects:
+                queryset = HomeWork.objects.filter(
+                    for_class__id=std_cls_id,
+                    batch=std_batch_id,
+                    subject__name=s,
+                )
+                if queryset.exists():
+                    sheet.append(queryset)
+
+            from datetime import datetime
+            current_date = datetime.now().date()
+            one_day_ahead = current_date + timedelta(days=1)
+            
+            reminders = []
+            for s in sheet:
+                for d in s:
+                    if d.last_day_of_submit == one_day_ahead:
+                        reminders.append(s)
+
+            notiss = NoticeForStudent.objects.filter(student=std)
+            
+            context = {
+                'reminders': reminders,
+                'notice': notiss,
+                       
+                       }
+            return render(request, 'student/dash_home.html', context)
+    
+    
     else:
         return render(request, 'main/404.html')
     
@@ -306,15 +370,6 @@ def view_hw(request, hw_id):
     return render(request, 'student/view_hw.html', context)
 
 # =-------------------------------------------------==
-
-
-
-
-
-
-
-
-
 
 
 # ----------------------------------- DONE (working on add marks) ------------------------------------------------
@@ -344,10 +399,6 @@ def add_mark1(request, shift):
     except Exception as e:
         return render(request, 'teacher/error.html', {'error_message': str(e)})
 
-# TWO PROBLEM ---> 
-# 1. 
-# 2. MODELS HAS BUGS WHEN I TRY TO ADD NEW SUBJECT TO TEACHER,
-#    THERE PREVIOUS ADDED SUBJECT WIPED 
 @login_required
 def add_mark2(request, shift, cls):
     try:
@@ -509,6 +560,7 @@ def teacher_dashb(request, page=None):
                     
                     return render(request, 'teacher/error.html', {'error_message': form.errors})
             else:
+                
                 form = HomeWorkForm()
 
                 # Get distinct batches, classes, and subjects based on MakeBatch objects
@@ -531,9 +583,9 @@ def teacher_dashb(request, page=None):
             teacher = request.user.teacher
             # reverse example of database from subject to makebatch class's teacher filter
             subjects = Subjects.objects.filter(makebatch__teacher=teacher)
-
             # applying distinct() to ensure that duplicate rows are removed
             the_class = ClassWithSubject.objects.filter(makebatch__teacher=teacher).distinct()
+    
 
             if request.method == 'POST':
                 the_title = request.POST.get('heading') 
@@ -564,8 +616,6 @@ def teacher_dashb(request, page=None):
             return render(request, 'teacher/quiz.html', context=data)
         
         elif page == 'your_student':
-
-            # batch_students = Student.objects.filter(batch_id=d.batch.id, your_subjects__contains=subj.name, class_subjects=cls)
             batch_of_teacher = MakeBatch.objects.filter(teacher = request.user.teacher)
             
             your_students = set()
@@ -631,6 +681,49 @@ def teacher_dashb(request, page=None):
                 'form' : form
             }
             return render(request, 'teacher/note.html', context)
+        
+        elif page == 'notice':
+            current_teacher = request.user.teacher
+            if request.method == 'POST':
+                the_student_id = request.POST.get('the_student')
+                the_notice = request.POST.get('notice')
+                notice_duration = request.POST.get('notice_last_for')
+
+                try:
+                    student = Student.objects.get(id=the_student_id)
+                    notice = NoticeForStudent(
+                        notice=the_notice,
+                        student=student,
+                        teacher=current_teacher,
+                        notice_last_for=notice_duration
+                    )
+                    notice.save()
+
+                    messages.success(request, 'Notice sent successfully.')
+
+                except Student.DoesNotExist:
+                    messages.error(request, 'Selected student does not exist.')
+                except Exception as e:
+                    messages.error(request, str(e))
+
+            
+            make_batch_objects = MakeBatch.objects.filter(teacher=current_teacher).distinct()
+            notiss = NoticeForStudent.objects.filter(teacher=current_teacher)
+            
+
+            '''
+            Here I did the reverse relation to do the short cut to find out all 
+            students of the current teacher is teacher. for that i did reverse 
+            relation with batch --> MakeBatch--> Teaacher's instance 
+            and the teacher instance is logged in user. it saves minimum of 5 to 8 lines
+            of codes that i used in 'your_students' page.
+            '''
+            all_students = Student.objects.filter(batch__makebatch__teacher=current_teacher).distinct()
+            
+            context = {
+                'mystudent': all_students,
+            }   
+            return render(request, 'teacher/notice_for_std.html', context)
 
 
         else:

@@ -859,3 +859,12 @@ main .recent-orders a{
     outline: none;
     box-shadow: none;
 }
+
+.bottom-data .orders form label {
+    font-size: 15px;
+    color: #060020;
+    font-weight:300;
+    
+    
+    
+}

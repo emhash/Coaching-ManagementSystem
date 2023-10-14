@@ -1,13 +1,41 @@
 {% extends 'student/dash_base.html' %}
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 
+
+{% endblock css %}
 {% block content %}
 
-<main>
-    <div class="bottom-data">
-        <div class="header">
-            <h2>Feedback</h2>
-        </div>
+
+<div class="bottom-data">
+    <div class="orders">
+        
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="star_rating" id="star_rating">
+            <h3>তোমার প্রতিষ্ঠান অথাবা শিক্ষক সম্পর্কে <span style="color:red;"> কোনো অভিযোগ থাকলে </span> লিখতে পারো।</h3>
+            <textarea class="input-field" name="speech" id="speech" cols="30" rows="10">{{ data.report }}</textarea>
+            
+            <h3>আমাদের প্রতিষ্ঠান এর সবকিছু বিবেচনায় তোমার রেটিং দাও </h3>
+            <div id="rateYo"></div>
+            <button type="submit">Submit</button>
+        </form>
+
     </div>
-</main>
+</div>
+
+<script>
+    $(function () {
+        $("#rateYo").rateYo({
+            rating: {{ data.rate_us|default:0 }},
+            fullStar: true,
+            onSet: function (rating) {
+                $('#star_rating').val(rating);
+            }
+        });
+    });
+</script>
 
 {% endblock content %}
