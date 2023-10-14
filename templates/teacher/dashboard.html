@@ -143,12 +143,18 @@
 
 <div class="reminders">
     <div class="header">
-        <h2>Reminders</h2>
-        <span >
-            <i class='bx bx-bell' ></i>
+        <h2>স্মৃতিচিহ্ন (Remiders)</h2>
+        <span style="font-size: 20px;">
+            {% if reminders %}
+            <i class='bx bxs-bell-ring bx-tada'></i>
+            {% else %}
+            <i class='bx bxs-bell'></i>
+            {% endif %}
         </span>
     </div>
-    {% for c in data %}
+
+
+    {% for c in reminders %}
     <div class="notification">
         <div class="icon">
             <span >
@@ -157,7 +163,7 @@
         </div>
         <div class="content">
             <div class="info">
-                <h3>প্রজাপতি ব্যাচে ৯ম এর ক্লাস</h3>
+                <a href="{% url "teacher_dashb" 'routine' %}"><h3>{{c.batch.batch_name}} ব্যাচে {{c.class_name}}এর ক্লাস</h3></a>
                 <small class="text_muted">
                     {{ c.start_class }} - {{ c.end_class }}
                 </small>
@@ -167,7 +173,8 @@
             </span>
         </div>
     </div>
-
+    
+    {% comment %} {% endfor %} {% endcomment %}
 {% endfor %}
 
 

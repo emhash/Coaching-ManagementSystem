@@ -17,11 +17,11 @@
                 
                 <i class='bx bxs-inbox'></i>
             </span>
-            {% for w in work %}
-            {{w.title}}
             
-            <span class="sign"> <a href="{% url "downloadfile" w.id %}">Download</a></span>
-            {% endfor %}
+            {{work}}
+            
+            <span class="sign"> <a href="{% url "downloadfile" "ExamSchedule" work.id %}">Download</a></span>
+            
         </div>
     </div>
     

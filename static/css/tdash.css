@@ -520,12 +520,6 @@ main .recent-orders a{
     margin-bottom: 0.8rem;
 }
 
-.right-section .reminders .header span{
-    padding: 10px;
-    box-shadow: var(--box-shadow);
-    background-color: var(--color-white);
-    border-radius: 50%;
-}
 
 .right-section .reminders .notification{
     background-color: var(--color-white);

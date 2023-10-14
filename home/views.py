@@ -9,10 +9,10 @@ from users.models import *
 from .more_backend import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# NEED TO DO UP NEXT +====>>
-# Student Profile pic, Teacher, Gurd also. 
-# blog, price and review dynamically change
-# day or evening shift add + dynamically change
+import os
+from django.http import StreamingHttpResponse 
+from wsgiref.util import FileWrapper
+import mimetypes
 
 
 def home(request):  
@@ -314,7 +314,7 @@ def student_dashb(request, page=None):
             print(schedule)
 
             context={
-                # 'schedule':schedule,
+                'schedule':schedule,
             }
             return render(request, 'student/xm_schedule.html', context)
 
@@ -752,14 +752,24 @@ def teacher_dashb(request, page=None):
 
             # --------------------------------------------------------
 
-            # ------------------- Un visited message --------------------
-            
+            # ------------------- Reminders message --------------------
+            current_time = datetime.now().time()
+            one_hour_ahead = (datetime.combine(datetime.today(), current_time) + timedelta(hours=1)).time()
 
+            reminder = []
+            for b in batch_of_teacher:
+                og_T = b.start_class
+                
+                datetime_obj = datetime.combine(datetime.today(), og_T)
+                one_hour_back = datetime_obj - timedelta(hours=1)
+                one_hour_back_time = one_hour_back.time()
+                if current_time >= one_hour_back_time and current_time <= og_T:
+                    reminder.append(b)
             # -----------------------------------------
-             
+            print(reminder)
             context = {
                 'newuser': current_page,
-                'data' : batch_of_teacher,
+                'reminders' : reminder,
                 
             }
             return render(request, 'teacher/dashboard.html', context)
@@ -980,15 +990,20 @@ def delete_question(request, q_id):
 
 # ============ This is for click and download file ==========
 
-import os
-from django.http import StreamingHttpResponse 
-from wsgiref.util import FileWrapper
-import mimetypes
+def downloadfile(request,the_model, id):
+    if the_model == 'NoteAndSheet':
+        model = NoteAndSheet
+        files = get_object_or_404(model, id = id)
+        locations = str(files.upload_note.url)
+    elif the_model == 'ExamSchedule':
+        model = ExamSchedule
+        files = get_object_or_404(model, id = id)
+        locations = str(files.file.url)
+    else:
+        locations = None
 
-def downloadfile(request, id):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    files = get_object_or_404(NoteAndSheet, id = id)
-    loc = str(files.upload_note.url)
+    loc = locations
     filepath = base_dir + loc
 
     thefile = filepath

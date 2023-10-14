@@ -10,7 +10,7 @@ urlpatterns = [
     path('userlogin/', userlogin, name="userlogin"),  
     path('profile/change_password/', change_password, name='change_password'),
     path('profile/settings/', edit_profile, name='edit_profile'),
-    path('downloadfile/<str:id>', downloadfile, name='downloadfile'),
+    path('downloadfile/<str:the_model>/<str:id>', downloadfile, name='downloadfile'),
 
     # Student
     path('student_dashboard/home', student_dashb, name="std_dashboard_home"), 

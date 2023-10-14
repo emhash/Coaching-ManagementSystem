@@ -29,7 +29,7 @@
 <script>
     $(function () {
         $("#rateYo").rateYo({
-            rating: {{ data.rate_us|default:0 }},
+            rating: {{ data.rate_us|default:1 }},
             fullStar: true,
             onSet: function (rating) {
                 $('#star_rating').val(rating);
