@@ -1,14 +1,15 @@
 {% extends "teacher/base.html" %}
 
 {% block content %}
-
-<div class="new-users">
-    <h1>{{sms.headline}}</h1>
+<div class="bottom-data">
+    <div class="orders">
+    <h1>  {{sms.headline}} </h1>
     <div style=" justify-content : center; font-size: 20px; margin-top: 25px; border: 1px dashed; padding: 5px 5px 5px 5px; border-radius : 12px;">
         <p >
             {{sms.description|safe}}
         </p>
 
+    </div>
     </div>
 </div>
 {% endblock content %}
