@@ -15,7 +15,7 @@
     --color-dark-variant: #06376e;
     --color-background: #bcd0f5d2;
 
-    --card-border-radius: 2rem;
+    --card-border-radius: 0.7rem;
     --border-radius-1: 0.4rem;
     --border-radius-2: 1.2rem;
 
@@ -755,12 +755,6 @@ main .recent-orders a{
 
 
 
-
-
-
-
-
-
 .bottom-data{
     
     display: flex;
@@ -772,8 +766,9 @@ main .recent-orders a{
 }
 
 .bottom-data>div{
+    margin-right: auto;
     border-radius: 20px;
-    background: #f0faff;
+    background: #f8fff0;
     padding: 24px;
     overflow-x: auto;
 }
@@ -786,7 +781,7 @@ main .recent-orders a{
 }
 
 .bottom-data .header h3{
-    margin-right: auto;
+    
     font-size: 24px;
     font-weight: 600;
 }
@@ -801,6 +796,7 @@ main .recent-orders a{
 }
 
 .bottom-data .orders table{
+    overflow-x:auto;
     margin: 0 auto;
     vertical-align: middle;
     width: 100%;
@@ -863,3 +859,4 @@ main .recent-orders a{
     
     
 }
+

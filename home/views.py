@@ -1062,4 +1062,6 @@ def guardian_dashb(request, page):
 
 
 def temp(request):
-    return render(request, 'temp.html')
+    form = CommonRegistrationForm(request.POST or None)
+    context = {'form':form}
+    return render(request, 'home/temp.html', context)

@@ -5,33 +5,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo Coaching center Management</title>
+    <title>CSCZ | {% block title %}{% endblock title %} </title>
     <link rel="shortcut icon" href="{% static "image/favicon.ico" %}" type="image/x-icon">
-    <!-- font awesome cdn link  -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- custom css file link  -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block css %}{% endblock css %}
-
-    <!-- custom js file link  -->
     <script src="{% static 'js/script.js' %}" defer></script>
     
 
 </head>
 <body>
 
-<!-- header section starts  -->
-
 <div id="menu-btn" class="fas fa-bars"></div>
 
 <header class="header">
 
-    <a href="{% url 'home' %}" class="logo"> <i class="fas fa-graduation-cap"></i> Coaching </a>
+    <a href="{% url 'home' %}" class="logo"> <i class="fas fa-graduation-cap"></i> সি এস সি জেড </a>
 
     <nav class="navbar">
         {% if user.is_authenticated %}
-        
+         
         <a href="{% url 'logout' %}" >
             <i class="fas fa-sign-in-alt"></i> লগআউট করুন
         </a>
@@ -43,6 +37,7 @@
 
 
         {% else %}
+        <a href="{% url 'home' %}"><i class="fas fa-home"></i> হোম</a>
         <a href="{% url 'userlogin' %}"><i class="fas fa-sign-in-alt"></i> লগইন করুন</a>
         <a href="{% url 'register_role' %}"><i class="fas fa-user-plus"></i> ভর্তি হোন </a>
         
@@ -52,7 +47,7 @@
         <a href="#contact"> <i class="fas fa-angle-right"></i> যোগাযোগ </a>
 
         <a href="#reviews"> <i class="fas fa-angle-right"></i> রিভিউ দেখুন </a>
-        <a href="#blogs"> <i class="fas fa-angle-right"></i> ব্লগ  </a>
+
 
         {% endif %}
 
@@ -62,10 +57,10 @@
         <a href="" class="fab fa-facebook-f"></a>
         <a href="" class="fab fa-twitter"></a>
         <a href="" class="fab fa-youtube"></a>
-        <a href="" class="fab fa-linkedin"></a>
+        <a href="https://www.linkedin.com/in/emhash/" class="fab fa-linkedin"></a>
     </div>
 
-    <p class="credit">created by <span><a href="github.com/emhash">@EMHASH</a></span> | all rights reserved!</p>
+    <p class="credit">created by <span><a href="https://www.github.com/emhash">@EMHASH</a></span> | all rights reserved!</p>
 
 </header>
 

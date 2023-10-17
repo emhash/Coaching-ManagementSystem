@@ -1,7 +1,7 @@
 {% extends 'init/base.html' %}
 {% load static %}
 
-{% block title %} Register{% endblock title %}
+{% block title %}temp{% endblock title %}
 {% block content %}
 
 
@@ -21,10 +21,12 @@
                 <div class="inputBox" style="margin-bottom: 0px;">
                     {% for field in form %}
                     {{ field }}
-                    
-                    {% if field.errors %}
-                    <p style="color: red; font-size: 14px;">{{ field.errors.as_text }}</p>
-                    {% endif %}
+                    <div class="box">
+
+                        {% if field.errors %}
+                        <p style="color: red; font-size: 14px;">{{ field.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
                     
                     {% endfor %}
                   
@@ -38,7 +40,7 @@
                 
             {% endif %}
                 
-                <input type="submit" value="রেজিস্টার করে পরবর্তী ধাপে প্রবেশ করুন" class="btn">
+                <input type="submit" value="পরবর্তী ধাপে প্রবেশ করুন" class="btn">
             </form>
             
     
