@@ -1,50 +1,39 @@
 {% extends 'init/base.html' %}
 {% load static %}
 
-{% block title %}temp{% endblock title %}
+{% block title %}Others info fill{% endblock title %}
 {% block content %}
 
+<section class="blogs" id="blogs">
+    <div class="heading">
+        <span>শেষ ধাপ </span>
+        <h3>এক নজরে তথ্যগুলো ও বিষয় নির্বাচন</h3>
+    </div>
 
-<section class="contact" id="contact">
-
-        <div class="heading">
+    <div class="box-container">
+        
+        <div class="box">
+            <img src={{user.student.profile_pic.url}} alt="">
+            <a href="#" class="title">{{user.student.s_name}}</a>
+            <p class="blog-description">নাম : {{ user.student.s_name }} | আইডি : {{ user.student.s_id }} । অভিবাবকের মোবাইল : {{ user.student.guardian_phone }}</p>
+            <p class="blog-description"></p>
             
-            <h3>{{role|title}} অ্যাকাউন্ট তৈরি করুন</h3> 
-            <br> 
-            <h2>অথবা অ্যাকাউন্ট থাকলে এখানে <a href=""> লগইন করুন</a> </h3>
-        </div>
-    
-        <div class="row">
+        </div> 
+        
 
-            <form class="form" id="a-form" action="" method="POST" novalidate>
+            <form class="box" id="a-form" action="" method="POST" novalidate>
                 {% csrf_token %}
-                <div class="inputBox" style="margin-bottom: 0px;">
-                    {% for field in form %}
-                    {{ field }}
-                    <div class="box">
 
-                        {% if field.errors %}
-                        <p style="color: red; font-size: 14px;">{{ field.errors.as_text }}</p>
-                        {% endif %}
-                    </div>
-                    
+                <select class="select-dropdown" name="selected_subjects" multiple>
+                    {% for subject in user.student.class_subjects.subjects.all %}
+                        <option value="{{ subject.name }}">{{ subject.name }}</option>
                     {% endfor %}
-                  
-                </div>
-
-                {% if form.non_field_errors %}
-                
-                    {% for error in form.non_field_errors %}
-                    <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                
-            {% endif %}
-                
-                <input type="submit" value="পরবর্তী ধাপে প্রবেশ করুন" class="btn">
-            </form>
-            
-    
-        </div>
-    
+                </select>
+        
+                <p class="error-message">অবশই আপনার প্রদান করা তথ্য সঠিক এবং আপনি যেসব বিষয়ে ক্লাস করতে ইচ্ছুক তা নির্বাচন করুন, এই পেজ এ পুনরায় ফিরে আসার উপায় নেই। যদি ভুল করে থাকেন তাহলে এডমিন কে কল করুন, তিনি ঠিক করতে পারবেন।</p>
+                    <button class="submit-button" type="submit">তথ্য নিশ্চিত করুন ও ভর্তি সম্পূর্ণ করুন</button>
+                     
+            </form>    
 </section>
+
 {% endblock content %}

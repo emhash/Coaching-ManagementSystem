@@ -1,8 +1,47 @@
 {% extends 'teacher/base.html' %}
 {% load static %}
 {% block content %}
+<div class="analyse">
+
+    <div class="sales" style = "box-shadow: none; ">
+            <div class="status">
+                <div class="info">
+                    <h3>Month income </h3>
+                    <h1>1500/=</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/salary.png" %}" alt="">
+                </div>
+            </div>
+    </div>
+    <div class="sales" style = "box-shadow: none; ">
+            <div class="status">
+                <div class="info">
+                    <h3>Total income </h3>
+                    <h1>50500/=</h1>
+                </div>
+                <div class="progresss">
+                    <img src="{% static "image/salary.png" %}" alt="">
+                </div>
+            </div>
+    </div>
+</div>
+<form action="" method="POST">
+    {% csrf_token %}
+
+   
+    <label for="notice">Enter ammount of Money</label>
+    <input type="text" name="notice" class="input-field"></input>
+
+    <label for="the_student">Select type </label>
+    <select name="the_student" class="input-field">
+        <option value="">Deposit</option>
+        <option value="">Withdraw</option>
+        
+    </select>
+
+    <button type="submit" id="notice-send-button" class="edit-button">Submit</button>
+</form>
 
 {% include "teacher/wallet1.html" %}
-
-
 {% endblock content %}

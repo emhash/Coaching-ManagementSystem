@@ -1,29 +1,45 @@
-{% load static %}
-
-{% comment %} <div class="analyse" >
-
-    <div class="sales" style="box-shadow:none;">
-        <div class="status" >
-            <div class="info">
-                <h3>Your Salary</h3>
-                <h1>15000/=</h1>
-            </div>
-            <div class="progresss">
-                <img src="{% static "image/salary.png" %}" alt="">
-            </div>
-        </div>
-    </div>
-    <div class="sales" style="box-shadow:none;">
-        <div class="status" >
-            <div class="info">
-                <h3>You widrawed</h3>
-                <h1>10000/=</h1>
-            </div>
-            <div class="progresss">
-                <img src="{% static "image/widraw.png" %}" alt="">
-            </div>
-        </div>
-    </div>
+<div class="bottom-data">
+    <div class="orders">
+        <div class="header">
+            <i class='bx bx-receipt'></i>
+            <h3>Your all tansaction history</h3>
+            <i class='bx bx-filter'></i>
+            <i class='bx bx-search'></i>
+        </div> 
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Money</th>
+              
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% comment %} {% for s in students %} {% endcomment %}
+            
+            <tr>
+                <td>
+                    {{s.s_name}}
+                    12 Octobor, 2023
+                </td>
+                <td>
+                    {{s.s_id}}
+                    Withdraw
+                </td>
+                
+                <td>
+                    {{s.user.date_joined}} 
+                    - 500/=
+                </td>
+                
+                
+            </tr>
+            
+            {% comment %} {% endfor %} {% endcomment %}
+        </tbody>
+    </table>
     
-</div> {% endcomment %}
-
+</div>
+</div>

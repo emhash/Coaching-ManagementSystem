@@ -80,7 +80,13 @@ class StudentForm(forms.ModelForm):
     def clean_guardian_email(self):
         guardian_email = self.cleaned_data.get('guardian_email')
         # Add your validation logic here
+        
         return guardian_email
+    def clean_shift(self):
+        shift = self.cleaned_data.get('shift')
+        if shift is None:
+            raise ValidationError('Please select shift')
+        return shift
 
 
 class TeacherForm(forms.ModelForm):
