@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'multiselectfield',
     'django_extensions',
     'ckeditor',
+    
+
 ]
 
 MIDDLEWARE = [
@@ -123,8 +125,8 @@ JAZZMIN_SETTINGS = {
         
         ],
     # "site_logo": "image/coaching.jpg",
-    "welcome_sign": "Welcome to the Coaching Center Admin Panel",
-    "site_brand": "CCMS",
+    "welcome_sign": "Welcome to the CSCZ Admin Panel",
+    "site_brand": "CSCZ",
     "copyright": "Md E H Ashiq",
     # "show_ui_builder":True,
 }

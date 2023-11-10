@@ -21,7 +21,7 @@ def home(request):
     else:
         return render(request, 'main/index.html')
 
-@login_required
+@login_required(login_url='userlogin')
 def logout_view(request):
     logout(request)
 
@@ -86,7 +86,7 @@ def registration(request):
         else:
             return redirect('register_role')
     
-@login_required
+@login_required(login_url='userlogin')
 def authentication(request):
     if request.user.role == 'student':
         student_profile = Student.objects.get(user=request.user)
@@ -144,8 +144,8 @@ def authentication(request):
     else:
         return render(request, 'main/404.html')
 
-
-@login_required
+ 
+@login_required(login_url='userlogin')
 def student_dashb(request, page=None):
     if request.user.role == 'student':
 
@@ -355,6 +355,32 @@ def student_dashb(request, page=None):
 
                     notice.append(nts)
                     
+            # from django.conf import settings
+            # from docx.shared import Inches
+
+            
+            # file_path = os.path.join(settings.BASE_DIR, 'static', 'doc', 'demo.docx')
+            # modified_file_path = os.path.join(settings.BASE_DIR, 'static', 'doc', f'newdemo{random.randint(1, 10)}.docx')
+            # demoCheck(file_path,modified_file_path)
+            # placeholders = {
+            #     'USER_NAME': str(request.user.student.s_name),
+            #     'ID_FOR_USER': str(request.user.student.s_id),
+            #     'CLS_FOR_USER': str(request.user.student.class_subjects),
+            #     'BATCH_FOR_USR': str(request.user.student.batch.batch_name),
+            # }
+
+            # document = Document(file_path)
+            # adsds= request.user.student
+            # image_path =  os.path.join(settings.MEDIA_ROOT, f'{adsds.profile_pic}' )
+            
+            # document.add_picture(image_path, width=Inches(1), height=Inches(1))
+
+            # for placeholder, replacement in placeholders.items():
+            #     target = re.compile(placeholder)
+            #     myreplace(document, target, replacement)
+
+            # modified_file_path = os.path.join(settings.BASE_DIR, 'static', 'doc', f'new{random.randint(1, 10)}.docx')
+            # document.save(modified_file_path)
 
 
             context = {
@@ -370,7 +396,7 @@ def student_dashb(request, page=None):
     
 
 # =--------------------STUDENT DAHBOARD ADITIONAL SETTINGS-----------------------------==
-@login_required
+@login_required(login_url='userlogin')
 def view_hw(request, hw_id):
 
     detail_hw = get_object_or_404(HomeWork, id = hw_id, )
@@ -384,7 +410,7 @@ def view_hw(request, hw_id):
 
 
 # ----------------------------------- DONE (working on add marks) ------------------------------------------------
-@login_required
+@login_required(login_url='userlogin')
 def add_mark1(request, shift):
     try:
         
@@ -410,7 +436,7 @@ def add_mark1(request, shift):
     except Exception as e:
         return render(request, 'teacher/error.html', {'error_message': str(e)})
 
-@login_required
+@login_required(login_url='userlogin')
 def add_mark2(request, shift, cls):
     try:
         sft = get_object_or_404(Shift, shift_name=shift)
@@ -426,7 +452,7 @@ def add_mark2(request, shift, cls):
     except Exception as e:
         return render(request, 'teacher/error.html', {'error_message': str(e)})
 
-@login_required
+@login_required(login_url='userlogin')
 def add_mark3(request, shift, cls, subject):
     try:
         sft = get_object_or_404(Shift, shift_name=shift)
@@ -453,7 +479,7 @@ def add_mark3(request, shift, cls, subject):
     except Exception as e:
         return render(request, 'teacher/error.html', {'error_message': str(e)})
 
-@login_required
+@login_required(login_url='userlogin')
 def add_mark4(request, shift, cls, subject, exam):
     try:
         sft = get_object_or_404(Shift, shift_name=shift)
@@ -514,7 +540,7 @@ def add_mark4(request, shift, cls, subject, exam):
 # ----------------------------------------------------------------------------------
 
 
-@login_required
+@login_required(login_url='userlogin')
 def teacher_dashb(request, page=None):
     if request.user.role == 'teacher':
         if page == 'add_mark':
@@ -799,7 +825,7 @@ def teacher_dashb(request, page=None):
 
 # -------------------DONE ( Settings for Teacher )----------------------
 
-@login_required
+@login_required(login_url='userlogin')
 def change_password(request):
     if request.user.role == 'student':
 
@@ -839,7 +865,7 @@ def change_password(request):
     
     # elif request.user.role == 'guardian':    
 
-@login_required
+@login_required(login_url='userlogin')
 def edit_profile(request):
     if request.user.role == 'student':
         student = request.user.student
@@ -877,7 +903,7 @@ def edit_profile(request):
         
         return render(request, 'teacher/edit_profile.html', {'form': form, 'teacher': teacher})
 
-@login_required
+@login_required(login_url='userlogin')
 def seen_message(request, msg_id):
 
     if request.user.role == "student":
@@ -910,7 +936,7 @@ def seen_message(request, msg_id):
 
     return render(request, 'main/read_msg.html', context)
 
-@login_required
+@login_required(login_url='userlogin')
 def delete_notice(request, n_id):
     note = get_object_or_404(NoticeForStudent, pk=n_id, teacher = request.user.teacher)
 
@@ -922,7 +948,7 @@ def delete_notice(request, n_id):
 
     return redirect('teacher_dashb', page='notice')
 
-@login_required
+@login_required(login_url='userlogin')
 def delete_note(request, note_id):
     note = get_object_or_404(NoteAndSheet, pk=note_id, teacher = request.user.teacher)
 
@@ -935,7 +961,7 @@ def delete_note(request, note_id):
 
     return redirect('teacher_dashb', page='note')
 
-@login_required
+@login_required(login_url='userlogin')
 def delete_hw(request, hw_id):
     note = get_object_or_404(HomeWork, pk=hw_id, teacher = request.user.teacher)
 
@@ -948,7 +974,7 @@ def delete_hw(request, hw_id):
 
     return redirect('teacher_dashb', page='hw')
 
-@login_required
+@login_required(login_url='userlogin')
 def question_and_answer_make_by_teacher(request, q_id):
     teacher = request.user.teacher
     the_category = get_object_or_404(QuizCategory, uid = q_id, teacher = teacher)
@@ -998,7 +1024,7 @@ def question_and_answer_make_by_teacher(request, q_id):
     }
     return render(request, 'teacher/question.html', context)
 
-@login_required
+@login_required(login_url='userlogin')
 def delete_question(request, q_id):
     try:
         question = Question.objects.get(uid=q_id, category__teacher = request.user.teacher)
