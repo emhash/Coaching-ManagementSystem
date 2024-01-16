@@ -5,7 +5,7 @@
 <p>This project is basically for Coaching institution including Its Management software. The site is running online and this site is created with professional look UI</p>
 
 Django project 2023 | Python
-✔ Live Demo: <a href='https://coaching.pythonanywhere.com/'> Demo</a>
+✔ Live Demo: <a href='https://coachings.pythonanywhere.com/'> Demo</a>
 
 <h2 align='center'>
 Main Page
