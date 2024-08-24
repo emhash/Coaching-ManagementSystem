@@ -8,7 +8,9 @@ Django project 2023 | Python
 ✔ Live Demo: <a href='https://coachings.pythonanywhere.com/'> Demo</a>
 
 Demo Account Detail:
+
 test mail: teacher1@gmail.com
+
 password: demo1234
 
 
